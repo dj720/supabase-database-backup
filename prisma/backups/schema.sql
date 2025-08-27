@@ -765,9 +765,6 @@ CREATE TABLE IF NOT EXISTS "public"."calculation_metadata" (
     "uuid" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "category" "text" DEFAULT 'Other'::"text",
     "subcategory" "text",
-    "variables" "jsonb",
-    "outputs" "jsonb",
-    "equation" "text",
     "guidance" "text" DEFAULT '''{}''::text[]'::"text",
     "checked" boolean DEFAULT false NOT NULL
 );
@@ -776,15 +773,15 @@ CREATE TABLE IF NOT EXISTS "public"."calculation_metadata" (
 ALTER TABLE "public"."calculation_metadata" OWNER TO "postgres";
 
 
-COMMENT ON COLUMN "public"."calculation_metadata"."variables" IS 'List of input variables with symbols, descriptions, and units in JSONB format';
+COMMENT ON TABLE "public"."calculation_metadata" IS 'Calculation metadata table - cleaned up duplicate columns, symbol field now in ParamSchema';
 
 
 
-COMMENT ON COLUMN "public"."calculation_metadata"."outputs" IS 'List of output variables with symbols, descriptions, and units in JSONB format';
+COMMENT ON COLUMN "public"."calculation_metadata"."input_schema" IS 'Input parameter definitions with symbol field for mathematical notation';
 
 
 
-COMMENT ON COLUMN "public"."calculation_metadata"."equation" IS 'User-friendly equation description or mathematical expression';
+COMMENT ON COLUMN "public"."calculation_metadata"."output_schema" IS 'Output parameter definitions with symbol field for mathematical notation';
 
 
 
