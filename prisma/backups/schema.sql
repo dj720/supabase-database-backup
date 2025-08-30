@@ -791,7 +791,7 @@ COMMENT ON COLUMN "public"."calculation_metadata"."checked" IS 'Boolean flag ind
 
 CREATE TABLE IF NOT EXISTS "public"."calculation_results" (
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "calculation_id" "uuid",
+    "result_description" "uuid",
     "project_id" "uuid" NOT NULL,
     "folder_id" "uuid" NOT NULL,
     "user_id" "uuid" NOT NULL,
@@ -1011,7 +1011,7 @@ CREATE INDEX "idx_calculation_metadata_uuid" ON "public"."calculation_metadata" 
 
 
 
-CREATE INDEX "idx_calculation_results_calculation_id" ON "public"."calculation_results" USING "btree" ("calculation_id");
+CREATE INDEX "idx_calculation_results_calculation_id" ON "public"."calculation_results" USING "btree" ("result_description");
 
 
 
