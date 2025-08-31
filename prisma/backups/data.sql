@@ -1092,6 +1092,13 @@ COPY "auth"."audit_log_entries" ("instance_id", "id", "payload", "created_at", "
 00000000-0000-0000-0000-000000000000	508e9d6b-9aef-4eec-ab49-e0bd013116a6	{"action":"token_revoked","actor_id":"bc7b3d31-990b-4f1e-975d-f2bf9605f160","actor_name":"John Naylor","actor_username":"john@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-08-29 15:18:37.289759+00	
 00000000-0000-0000-0000-000000000000	68397341-0add-4627-9fab-d5ee4ab1a25a	{"action":"token_refreshed","actor_id":"bc7b3d31-990b-4f1e-975d-f2bf9605f160","actor_name":"John Naylor","actor_username":"john@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-08-29 16:32:00.60445+00	
 00000000-0000-0000-0000-000000000000	c39b2123-0e62-4a02-a9af-a24b985aa919	{"action":"token_revoked","actor_id":"bc7b3d31-990b-4f1e-975d-f2bf9605f160","actor_name":"John Naylor","actor_username":"john@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-08-29 16:32:00.651072+00	
+00000000-0000-0000-0000-000000000000	1a517566-c27a-450e-8ab7-bf28410dc777	{"action":"token_refreshed","actor_id":"bc7b3d31-990b-4f1e-975d-f2bf9605f160","actor_name":"John Naylor","actor_username":"john@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-08-30 03:52:16.357949+00	
+00000000-0000-0000-0000-000000000000	5ca8e870-6e69-405d-95ff-a44ab8116b94	{"action":"token_revoked","actor_id":"bc7b3d31-990b-4f1e-975d-f2bf9605f160","actor_name":"John Naylor","actor_username":"john@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-08-30 03:52:16.406093+00	
+00000000-0000-0000-0000-000000000000	3cb07f84-6f75-44ba-bd23-a96f2e722525	{"action":"token_refreshed","actor_id":"bc7b3d31-990b-4f1e-975d-f2bf9605f160","actor_name":"John Naylor","actor_username":"john@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-08-30 03:52:16.541356+00	
+00000000-0000-0000-0000-000000000000	94bc5319-5550-40a8-8ec5-da841866a2e5	{"action":"token_refreshed","actor_id":"bc7b3d31-990b-4f1e-975d-f2bf9605f160","actor_name":"John Naylor","actor_username":"john@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-08-30 04:50:29.638847+00	
+00000000-0000-0000-0000-000000000000	c60b591c-33a0-49bc-bdb7-b341ef559913	{"action":"token_revoked","actor_id":"bc7b3d31-990b-4f1e-975d-f2bf9605f160","actor_name":"John Naylor","actor_username":"john@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-08-30 04:50:29.664476+00	
+00000000-0000-0000-0000-000000000000	bed5f34c-157a-4f96-8218-6c5bfedcbd29	{"action":"token_refreshed","actor_id":"bc7b3d31-990b-4f1e-975d-f2bf9605f160","actor_name":"John Naylor","actor_username":"john@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-08-30 11:42:33.833874+00	
+00000000-0000-0000-0000-000000000000	5b42ce1c-48e1-4226-823d-acc1b42e727a	{"action":"token_revoked","actor_id":"bc7b3d31-990b-4f1e-975d-f2bf9605f160","actor_name":"John Naylor","actor_username":"john@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-08-30 11:42:33.89795+00	
 \.
 
 
@@ -1109,7 +1116,7 @@ COPY "auth"."flow_state" ("id", "user_id", "auth_code", "code_challenge_method",
 
 COPY "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous", "company", "profession", "country", "city") FROM stdin;
 00000000-0000-0000-0000-000000000000	b8c2ca65-ad45-4310-af57-49368e91d3bb	authenticated	authenticated	david_naylor@icloud.com	$2a$10$tWaW93e0SImQQFDGOPw6E.80EvSYa5nbV8BJ.MlFfCiAFZ3HzhU5W	2025-04-09 07:35:33.594117+00	\N		\N		\N			\N	2025-04-09 07:35:33.599907+00	{"provider": "email", "providers": ["email"]}	{"sub": "b8c2ca65-ad45-4310-af57-49368e91d3bb", "email": "david_naylor@icloud.com", "full_name": "David N", "email_verified": true, "phone_verified": false}	f	2025-04-09 07:35:33.536089+00	2025-04-09 07:35:33.628671+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
-00000000-0000-0000-0000-000000000000	bc7b3d31-990b-4f1e-975d-f2bf9605f160	authenticated	authenticated	john@gmail.com	$2a$10$hPEmhja05wbjeDHDbMCLMeYxyiwTnSkD0P1HfpBaqTzJnNzJbt.h.	2025-04-10 05:23:48.698628+00	\N		\N		\N			\N	2025-08-29 10:36:29.279958+00	{"provider": "email", "providers": ["email"]}	{"sub": "bc7b3d31-990b-4f1e-975d-f2bf9605f160", "city": "Cambridge", "email": "john@gmail.com", "company": "Mott MacDonald", "country": "United Kingdom", "full_name": "John Naylor", "last_name": "Naylor", "first_name": "John", "profession": "Electrical Engineer", "avatar_emoji": "🐸", "email_verified": true, "phone_verified": false}	f	2025-04-10 05:23:48.649145+00	2025-08-29 16:32:00.723087+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
+00000000-0000-0000-0000-000000000000	bc7b3d31-990b-4f1e-975d-f2bf9605f160	authenticated	authenticated	john@gmail.com	$2a$10$hPEmhja05wbjeDHDbMCLMeYxyiwTnSkD0P1HfpBaqTzJnNzJbt.h.	2025-04-10 05:23:48.698628+00	\N		\N		\N			\N	2025-08-29 10:36:29.279958+00	{"provider": "email", "providers": ["email"]}	{"sub": "bc7b3d31-990b-4f1e-975d-f2bf9605f160", "city": "Cambridge", "email": "john@gmail.com", "company": "Mott MacDonald", "country": "United Kingdom", "full_name": "John Naylor", "last_name": "Naylor", "first_name": "John", "profession": "Electrical Engineer", "avatar_emoji": "🐸", "email_verified": true, "phone_verified": false}	f	2025-04-10 05:23:48.649145+00	2025-08-30 11:42:33.974163+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
 00000000-0000-0000-0000-000000000000	89a501d9-e11e-4215-8c0c-1b071badf9ec	authenticated	authenticated	djnaylor97@gmail.com	$2a$06$rMH7VZJ5cNmVdVxFuxsw9OU2UIe.BdVNDFjoWJVt0.Qr9jPrI7fqi	2025-04-09 05:50:08.723654+00	\N		\N		\N			\N	2025-08-26 06:24:41.17098+00	{"provider": "email", "providers": ["email"]}	{"city": "London", "role": "admin", "company": "WSP", "country": "", "full_name": "David Naylor", "last_name": "Naylor", "first_name": "David", "profession": "Mech", "avatar_emoji": "👨‍💻", "email_verified": true}	t	2025-04-09 05:50:08.66869+00	2025-08-29 09:20:52.961587+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
 \.
 
@@ -1138,7 +1145,7 @@ COPY "auth"."instances" ("id", "uuid", "raw_base_config", "created_at", "updated
 --
 
 COPY "auth"."sessions" ("id", "user_id", "created_at", "updated_at", "factor_id", "aal", "not_after", "refreshed_at", "user_agent", "ip", "tag") FROM stdin;
-52277a3d-395c-456f-9213-525dd687f1bc	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-08-29 10:36:29.280061+00	2025-08-29 16:32:00.752371+00	\N	aal1	\N	2025-08-29 16:32:00.752282	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15	104.28.71.161	\N
+52277a3d-395c-456f-9213-525dd687f1bc	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-08-29 10:36:29.280061+00	2025-08-30 11:42:34.002776+00	\N	aal1	\N	2025-08-30 11:42:33.999077	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15	45.80.184.81	\N
 \.
 
 
@@ -1183,7 +1190,10 @@ COPY "auth"."refresh_tokens" ("instance_id", "id", "token", "user_id", "revoked"
 00000000-0000-0000-0000-000000000000	532	xytnve42fp5k	bc7b3d31-990b-4f1e-975d-f2bf9605f160	t	2025-08-29 10:36:29.291325+00	2025-08-29 14:20:10.084377+00	\N	52277a3d-395c-456f-9213-525dd687f1bc
 00000000-0000-0000-0000-000000000000	533	tq6txyr63u2n	bc7b3d31-990b-4f1e-975d-f2bf9605f160	t	2025-08-29 14:20:10.124486+00	2025-08-29 15:18:37.291658+00	xytnve42fp5k	52277a3d-395c-456f-9213-525dd687f1bc
 00000000-0000-0000-0000-000000000000	534	uxnjdmiizhne	bc7b3d31-990b-4f1e-975d-f2bf9605f160	t	2025-08-29 15:18:37.304469+00	2025-08-29 16:32:00.664422+00	tq6txyr63u2n	52277a3d-395c-456f-9213-525dd687f1bc
-00000000-0000-0000-0000-000000000000	535	kbtnqzp7lmie	bc7b3d31-990b-4f1e-975d-f2bf9605f160	f	2025-08-29 16:32:00.696803+00	2025-08-29 16:32:00.696803+00	uxnjdmiizhne	52277a3d-395c-456f-9213-525dd687f1bc
+00000000-0000-0000-0000-000000000000	535	kbtnqzp7lmie	bc7b3d31-990b-4f1e-975d-f2bf9605f160	t	2025-08-29 16:32:00.696803+00	2025-08-30 03:52:16.413236+00	uxnjdmiizhne	52277a3d-395c-456f-9213-525dd687f1bc
+00000000-0000-0000-0000-000000000000	536	fducjviaomdt	bc7b3d31-990b-4f1e-975d-f2bf9605f160	t	2025-08-30 03:52:16.452188+00	2025-08-30 04:50:29.670647+00	kbtnqzp7lmie	52277a3d-395c-456f-9213-525dd687f1bc
+00000000-0000-0000-0000-000000000000	537	fbcqxilu56yn	bc7b3d31-990b-4f1e-975d-f2bf9605f160	t	2025-08-30 04:50:29.681863+00	2025-08-30 11:42:33.9098+00	fducjviaomdt	52277a3d-395c-456f-9213-525dd687f1bc
+00000000-0000-0000-0000-000000000000	538	ffmcmnsjcuwd	bc7b3d31-990b-4f1e-975d-f2bf9605f160	f	2025-08-30 11:42:33.944927+00	2025-08-30 11:42:33.944927+00	fbcqxilu56yn	52277a3d-395c-456f-9213-525dd687f1bc
 \.
 
 
@@ -1364,16 +1374,15 @@ u_value_compliance_check	U-Value Compliance Check	Check if a calculated U-value 
 
 COPY "public"."calculation_results" ("id", "result_description", "project_id", "folder_id", "user_id", "inputs", "outputs", "created_at", "calculation_metadata_id") FROM stdin;
 ce775b8c-217c-4078-80fc-94d58cdeca3d	\N	6b392402-f448-45dd-9efc-73fcd8d070cc	c9f83910-c1c3-41cc-900f-b1dc91a6e5dd	bc7b3d31-990b-4f1e-975d-f2bf9605f160	{"duct_area": 6, "volume_flow_rate": 23}	{"velocity": 3.8333333333333335}	2025-08-18 11:53:37.755284+00	84de93ab-818f-4ae9-92a6-556a1b090546
-cc49f065-fc63-43d2-b0e3-dcc0247c64c9	\N	6b392402-f448-45dd-9efc-73fcd8d070cc	c9f83910-c1c3-41cc-900f-b1dc91a6e5dd	bc7b3d31-990b-4f1e-975d-f2bf9605f160	{"lhv_m3": 10, "efficiency": 33, "energy_demand_kw": 99}	{"gas_flow_rate": 0.3}	2025-08-29 15:01:54.799859+00	f7c7c958-a416-4e38-9451-ecf14f1ada69
 8b681bc9-0285-461b-bf61-473cbb83f845	\N	fb01413f-8938-4227-b0fd-3ad7626ceb92	850af8cb-8b2f-4578-9a6e-012253a4592b	bc7b3d31-990b-4f1e-975d-f2bf9605f160	{"lhv_m3": 10, "efficiency": 87, "energy_demand_kw": 1000}	{"gas_flow_rate": 1.1494252873563218}	2025-08-29 14:44:42.958137+00	f7c7c958-a416-4e38-9451-ecf14f1ada69
-7a3dbc38-09a2-40a8-b1f9-bd08ed4b1429	\N	6b392402-f448-45dd-9efc-73fcd8d070cc	c9f83910-c1c3-41cc-900f-b1dc91a6e5dd	bc7b3d31-990b-4f1e-975d-f2bf9605f160	{"occupation": 2, "room_volume": 2, "air_per_person": 2, "air_changes_per_hour": 2}	{"method": "OFR", "volume_flow_rate": 0.004}	2025-06-30 12:08:11.646324+00	022891ff-726a-429f-ad3a-811ae782d831
+a40ffac4-b092-459c-8903-b498b938e0e7	\N	e500c71e-4008-4d14-a085-5309f5619275	9c45d8f5-d7d7-4b4d-a595-86bc4264521c	bc7b3d31-990b-4f1e-975d-f2bf9605f160	{"lhv_m3": 10, "efficiency": 90, "energy_demand_kw": 100}	{"gas_flow_rate": 0.1111111111111111}	2025-08-30 04:02:32.805365+00	f7c7c958-a416-4e38-9451-ecf14f1ada69
 40ee8868-d642-4acd-bd2c-08d9b5324074	\N	6b392402-f448-45dd-9efc-73fcd8d070cc	c9f83910-c1c3-41cc-900f-b1dc91a6e5dd	bc7b3d31-990b-4f1e-975d-f2bf9605f160	{"occupation": 1, "room_volume": 1, "air_per_person": 1, "air_changes_per_hour": 1}	{"method": "OFR", "volume_flow_rate": 0.001}	2025-06-30 12:08:31.873703+00	022891ff-726a-429f-ad3a-811ae782d831
 9f8740bd-f11a-4810-a97d-f10c00e1652d	\N	6b392402-f448-45dd-9efc-73fcd8d070cc	c9f83910-c1c3-41cc-900f-b1dc91a6e5dd	bc7b3d31-990b-4f1e-975d-f2bf9605f160	{"occupation": "1", "air_per_person": "10"}	{"volume_flow_rate": 0.01}	2025-07-02 07:20:01.658529+00	6090c377-8c0f-4c32-bfc2-87ea9bee225d
 aef4e8b2-b5ca-434c-a18b-fb172f530ded	\N	6b392402-f448-45dd-9efc-73fcd8d070cc	c9f83910-c1c3-41cc-900f-b1dc91a6e5dd	bc7b3d31-990b-4f1e-975d-f2bf9605f160	{"width_mm": "200", "height_mm": "100"}	{"aspect_ratio": 2}	2025-07-02 07:22:14.957043+00	cebe42db-47fe-4304-bd37-90079d5bede5
 c9a0483b-a3f5-41a6-a1ba-438eb5dc854b	\N	6b392402-f448-45dd-9efc-73fcd8d070cc	c9f83910-c1c3-41cc-900f-b1dc91a6e5dd	bc7b3d31-990b-4f1e-975d-f2bf9605f160	{"occupation": "1", "air_per_person": "2"}	{"volume_flow_rate": 0.002}	2025-07-02 07:24:41.998869+00	6090c377-8c0f-4c32-bfc2-87ea9bee225d
 d7316e77-01ad-4e93-a0b7-3652d41c22ea	\N	6b392402-f448-45dd-9efc-73fcd8d070cc	c9f83910-c1c3-41cc-900f-b1dc91a6e5dd	bc7b3d31-990b-4f1e-975d-f2bf9605f160	{"air_volume": "2", "max_duct_velocity": "3.5"}	{"min_diameter_mm": 853}	2025-07-03 10:37:20.681256+00	a7591979-a8c0-4085-95b8-543ef1dc20cd
 198bcf0b-cfcf-4745-94b3-d6bab1f52b6c	\N	8e0c14ba-dad0-4580-97d4-505591e434b6	d6e6cd7c-f002-4a85-9836-ff177f818fa8	bc7b3d31-990b-4f1e-975d-f2bf9605f160	{"room_volume": "2", "volume_flow_rate": "1"}	{"ach": 1800}	2025-07-14 12:14:43.957613+00	f982fa35-3e49-435f-a0b1-c151ef776da8
-48ed130b-9e12-4a9b-afa7-7ed96634549e	\N	6b392402-f448-45dd-9efc-73fcd8d070cc	c9f83910-c1c3-41cc-900f-b1dc91a6e5dd	bc7b3d31-990b-4f1e-975d-f2bf9605f160	{"room_volume": 10, "volume_flow_rate": 1}	360	2025-07-25 03:16:29.286376+00	f982fa35-3e49-435f-a0b1-c151ef776da8
+c66eb6ff-e89c-4619-8354-509cfdb980c4	qwerty	6b392402-f448-45dd-9efc-73fcd8d070cc	c9f83910-c1c3-41cc-900f-b1dc91a6e5dd	bc7b3d31-990b-4f1e-975d-f2bf9605f160	{"material": "PB", "nominal_diameter": 75}	{"cross_sectional_area": 0.00009597565556716857}	2025-08-30 04:22:18.32171+00	920cec6f-3b43-42eb-be8e-def9b5725b83
 \.
 
 
@@ -1413,7 +1422,7 @@ ccc194a3-c54f-4653-b33e-f9e6404af61a	width		1	m	6b392402-f448-45dd-9efc-73fcd8d0
 
 COPY "public"."user_calculation_limits" ("id", "user_id", "month_year", "calculation_count", "monthly_limit", "created_at", "updated_at") FROM stdin;
 2249fcb9-3c20-4588-8dba-106a65e3db8d	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-08	7	100	2025-08-12 05:24:10.625787+00	2025-08-26 16:05:42.125262+00
-37c0fc2a-8f62-4d5c-9f1e-db1357d0dbf3	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-08	25	100	2025-08-12 04:48:42.90199+00	2025-08-29 15:33:58.996953+00
+37c0fc2a-8f62-4d5c-9f1e-db1357d0dbf3	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-08	31	100	2025-08-12 04:48:42.90199+00	2025-08-30 04:22:02.363237+00
 \.
 
 
@@ -1469,7 +1478,7 @@ COPY "storage"."s3_multipart_uploads_parts" ("id", "upload_id", "size", "part_nu
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: supabase_auth_admin
 --
 
-SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 535, true);
+SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 538, true);
 
 
 --

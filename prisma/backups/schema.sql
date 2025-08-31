@@ -791,7 +791,7 @@ COMMENT ON COLUMN "public"."calculation_metadata"."checked" IS 'Boolean flag ind
 
 CREATE TABLE IF NOT EXISTS "public"."calculation_results" (
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "result_description" "uuid",
+    "result_description" "text",
     "project_id" "uuid" NOT NULL,
     "folder_id" "uuid" NOT NULL,
     "user_id" "uuid" NOT NULL,
@@ -1342,6 +1342,10 @@ CREATE POLICY "Users can delete their own calculation flows" ON "public"."calcul
 
 
 
+CREATE POLICY "Users can delete their own calculation results" ON "public"."calculation_results" FOR DELETE USING (("auth"."uid"() = "user_id"));
+
+
+
 CREATE POLICY "Users can delete their own folder templates" ON "public"."folder_templates" FOR DELETE USING ((("auth"."uid"() = "user_id") AND ("is_default" = false)));
 
 
@@ -1373,6 +1377,10 @@ CREATE POLICY "Users can update their own calculation flows" ON "public"."calcul
 
 
 CREATE POLICY "Users can update their own calculation limits" ON "public"."user_calculation_limits" FOR UPDATE USING (("auth"."uid"() = "user_id"));
+
+
+
+CREATE POLICY "Users can update their own calculation results" ON "public"."calculation_results" FOR UPDATE USING (("auth"."uid"() = "user_id"));
 
 
 
