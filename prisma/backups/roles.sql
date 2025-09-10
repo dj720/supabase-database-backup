@@ -1,4 +1,6 @@
 
+\restrict 024kehRwQd3agISx1wWAFrVljEbcnf46gddVKOsbuTWVSS9TougZpbk18GFn8M1
+
 SET default_transaction_read_only = off;
 
 SET client_encoding = 'UTF8';
@@ -14,5 +16,7 @@ ALTER ROLE "authenticated" SET "statement_timeout" TO '8s';
 ALTER ROLE "authenticator" SET "statement_timeout" TO '8s';
 
 GRANT "postgres" TO "cli_login_postgres";
+
+\unrestrict 024kehRwQd3agISx1wWAFrVljEbcnf46gddVKOsbuTWVSS9TougZpbk18GFn8M1
 
 RESET ALL;
