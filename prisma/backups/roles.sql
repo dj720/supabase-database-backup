@@ -1,5 +1,5 @@
 
-\restrict 8gmh2PUJ5mPl0n7OTNBwgMxQzrHDq1aFOVxp8lgbpLnF9XyqRi7LbLbTa7BcGoo
+\restrict h399yxMItZDcdd3erKXtKV12GucDxbZaCakmxKiblWAq6kId2TDLLPmyMpMZeVM
 
 SET default_transaction_read_only = off;
 
@@ -17,6 +17,6 @@ ALTER ROLE "authenticator" SET "statement_timeout" TO '8s';
 
 GRANT "postgres" TO "cli_login_postgres";
 
-\unrestrict 8gmh2PUJ5mPl0n7OTNBwgMxQzrHDq1aFOVxp8lgbpLnF9XyqRi7LbLbTa7BcGoo
+\unrestrict h399yxMItZDcdd3erKXtKV12GucDxbZaCakmxKiblWAq6kId2TDLLPmyMpMZeVM
 
 RESET ALL;
