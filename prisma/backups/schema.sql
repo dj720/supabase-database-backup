@@ -1,5 +1,5 @@
 
-\restrict QsjWateSqxNEdhEZc2k2BeSfWHmLvswHwD43Fy8oE3kxUldYjyfuvsRcvOM09nC
+\restrict Bdo1UbMg6J1dV6GNtEAUr5lGAO7VSHiZioO70cIf4e7udyTa3MqzrNbd9xzAk3g
 
 
 SET statement_timeout = 0;
@@ -889,6 +889,26 @@ CREATE TABLE IF NOT EXISTS "public"."projects" (
 ALTER TABLE "public"."projects" OWNER TO "postgres";
 
 
+CREATE TABLE IF NOT EXISTS "public"."user_calculation_favorites" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "user_id" "uuid" NOT NULL,
+    "calculation_id" "text" NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL
+);
+
+
+ALTER TABLE "public"."user_calculation_favorites" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."user_calculation_favorites" IS 'User-specific calculation favorites - allows each user to favorite calculations independently';
+
+
+
+COMMENT ON COLUMN "public"."user_calculation_favorites"."calculation_id" IS 'References calculation_metadata.calc_id (string identifier)';
+
+
+
 ALTER TABLE ONLY "public"."calculation_flows"
     ADD CONSTRAINT "calculation_flows_pkey" PRIMARY KEY ("id");
 
@@ -936,6 +956,16 @@ ALTER TABLE ONLY "public"."project_constraints"
 
 ALTER TABLE ONLY "public"."projects"
     ADD CONSTRAINT "projects_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."user_calculation_favorites"
+    ADD CONSTRAINT "user_calculation_favorites_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."user_calculation_favorites"
+    ADD CONSTRAINT "user_calculation_favorites_user_id_calculation_id_key" UNIQUE ("user_id", "calculation_id");
 
 
 
@@ -1089,6 +1119,18 @@ CREATE INDEX "idx_projects_is_favorite" ON "public"."projects" USING "btree" ("i
 
 
 
+CREATE INDEX "idx_user_calculation_favorites_calculation_id" ON "public"."user_calculation_favorites" USING "btree" ("calculation_id");
+
+
+
+CREATE INDEX "idx_user_calculation_favorites_created_at" ON "public"."user_calculation_favorites" USING "btree" ("created_at" DESC);
+
+
+
+CREATE INDEX "idx_user_calculation_favorites_user_id" ON "public"."user_calculation_favorites" USING "btree" ("user_id");
+
+
+
 CREATE INDEX "idx_user_calculation_limits_month_year" ON "public"."user_calculation_limits" USING "btree" ("month_year");
 
 
@@ -1130,6 +1172,10 @@ CREATE OR REPLACE TRIGGER "update_folder_templates_updated_at" BEFORE UPDATE ON 
 
 
 CREATE OR REPLACE TRIGGER "update_project_constraints_updated_at" BEFORE UPDATE ON "public"."project_constraints" FOR EACH ROW EXECUTE FUNCTION "public"."update_project_constraints_updated_at"();
+
+
+
+CREATE OR REPLACE TRIGGER "update_user_calculation_favorites_updated_at" BEFORE UPDATE ON "public"."user_calculation_favorites" FOR EACH ROW EXECUTE FUNCTION "public"."update_updated_at_column"();
 
 
 
@@ -1204,6 +1250,11 @@ ALTER TABLE ONLY "public"."project_constraints"
 
 ALTER TABLE ONLY "public"."projects"
     ADD CONSTRAINT "projects_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."user_calculation_favorites"
+    ADD CONSTRAINT "user_calculation_favorites_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
 
 
 
@@ -1340,6 +1391,10 @@ CREATE POLICY "Users can delete folders in their projects" ON "public"."folders"
 
 
 
+CREATE POLICY "Users can delete their own calculation favorites" ON "public"."user_calculation_favorites" FOR DELETE USING (("auth"."uid"() = "user_id"));
+
+
+
 CREATE POLICY "Users can delete their own calculation flows" ON "public"."calculation_flows" FOR DELETE USING (("auth"."uid"() = "user_id"));
 
 
@@ -1357,6 +1412,10 @@ CREATE POLICY "Users can delete their own projects" ON "public"."projects" FOR D
 
 
 CREATE POLICY "Users can insert own feedback" ON "public"."feedback" FOR INSERT WITH CHECK (("auth"."uid"() = "user_id"));
+
+
+
+CREATE POLICY "Users can insert their own calculation favorites" ON "public"."user_calculation_favorites" FOR INSERT WITH CHECK (("auth"."uid"() = "user_id"));
 
 
 
@@ -1418,6 +1477,10 @@ CREATE POLICY "Users can view projects with valid session" ON "public"."projects
 
 
 
+CREATE POLICY "Users can view their own calculation favorites" ON "public"."user_calculation_favorites" FOR SELECT USING (("auth"."uid"() = "user_id"));
+
+
+
 CREATE POLICY "Users can view their own calculation flows" ON "public"."calculation_flows" FOR SELECT USING (("auth"."uid"() = "user_id"));
 
 
@@ -1460,6 +1523,9 @@ ALTER TABLE "public"."project_constraints" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."projects" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."user_calculation_favorites" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."user_calculation_limits" ENABLE ROW LEVEL SECURITY;
@@ -1831,6 +1897,12 @@ GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public".
 
 
 
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."user_calculation_favorites" TO "anon";
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."user_calculation_favorites" TO "authenticated";
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."user_calculation_favorites" TO "service_role";
+
+
+
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES TO "postgres";
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES TO "anon";
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES TO "authenticated";
@@ -1885,6 +1957,6 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT SELECT,INS
 
 
 
-\unrestrict QsjWateSqxNEdhEZc2k2BeSfWHmLvswHwD43Fy8oE3kxUldYjyfuvsRcvOM09nC
+\unrestrict Bdo1UbMg6J1dV6GNtEAUr5lGAO7VSHiZioO70cIf4e7udyTa3MqzrNbd9xzAk3g
 
 RESET ALL;
