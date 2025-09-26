@@ -88,6 +88,266 @@ $$;
 ALTER FUNCTION "public"."can_user_run_calculation"("user_uuid" "uuid") OWNER TO "postgres";
 
 
+CREATE OR REPLACE FUNCTION "public"."convert_param_to_new_format"("old_param" "jsonb") RETURNS "jsonb"
+    LANGUAGE "plpgsql"
+    AS $$
+DECLARE
+    new_param JSONB;
+    old_unit TEXT;
+    old_dimension TEXT;
+    units JSONB;
+BEGIN
+    -- Initialize new parameter structure
+    new_param := jsonb_build_object(
+        'type', COALESCE(old_param->>'type', 'float'),
+        'label', COALESCE(old_param->>'label', ''),
+        'symbol', COALESCE(old_param->>'symbol', ''),
+        'default_value', old_param->'default',
+        'optional', false,
+        'precision', jsonb_build_object(
+            'dp', 2,
+            'sf', null
+        ),
+        'constraints', jsonb_build_object(
+            'min', null,
+            'max', null
+        ),
+        'help_text', COALESCE(old_param->>'description', '')
+    );
+    
+    -- Get old unit and dimension
+    old_unit := old_param->>'unit';
+    old_dimension := old_param->>'dimension';
+    
+    -- Initialize units object
+    units := jsonb_build_object();
+    
+    -- Add dimension if present
+    IF old_dimension IS NOT NULL AND old_dimension != '' THEN
+        units := units || jsonb_build_object('dimension', old_dimension);
+    END IF;
+    
+    -- Map common units to metric/imperial equivalents
+    CASE old_unit
+        WHEN 'm³' THEN units := units || jsonb_build_object('metric', 'meter**3', 'imperial', 'foot**3');
+        WHEN 'm²' THEN units := units || jsonb_build_object('metric', 'meter**2', 'imperial', 'foot**2');
+        WHEN 'm' THEN units := units || jsonb_build_object('metric', 'meter', 'imperial', 'foot');
+        WHEN 'kg' THEN units := units || jsonb_build_object('metric', 'kilogram', 'imperial', 'pound');
+        WHEN 'Pa' THEN units := units || jsonb_build_object('metric', 'pascal', 'imperial', 'pound_per_square_inch');
+        WHEN 'W' THEN units := units || jsonb_build_object('metric', 'watt', 'imperial', 'btu_per_hour');
+        WHEN '°C' THEN units := units || jsonb_build_object('metric', 'celsius', 'imperial', 'fahrenheit');
+        WHEN 'K' THEN units := units || jsonb_build_object('metric', 'kelvin', 'imperial', 'rankine');
+        WHEN 'm/s' THEN units := units || jsonb_build_object('metric', 'meter_per_second', 'imperial', 'foot_per_second');
+        WHEN 'm³/s' THEN units := units || jsonb_build_object('metric', 'meter**3_per_second', 'imperial', 'foot**3_per_second');
+        WHEN 'kg/m³' THEN units := units || jsonb_build_object('metric', 'kilogram_per_meter**3', 'imperial', 'pound_per_foot**3');
+        WHEN 'W/m²' THEN units := units || jsonb_build_object('metric', 'watt_per_meter**2', 'imperial', 'btu_per_hour_per_foot**2');
+        WHEN 'W/m²K' THEN units := units || jsonb_build_object('metric', 'watt_per_meter**2_kelvin', 'imperial', 'btu_per_hour_per_foot**2_fahrenheit');
+        WHEN 'J' THEN units := units || jsonb_build_object('metric', 'joule', 'imperial', 'btu');
+        WHEN 'J/kg' THEN units := units || jsonb_build_object('metric', 'joule_per_kilogram', 'imperial', 'btu_per_pound');
+        WHEN 'J/kg·K' THEN units := units || jsonb_build_object('metric', 'joule_per_kilogram_kelvin', 'imperial', 'btu_per_pound_fahrenheit');
+        WHEN 'W/m·K' THEN units := units || jsonb_build_object('metric', 'watt_per_meter_kelvin', 'imperial', 'btu_per_hour_per_foot_fahrenheit');
+        WHEN 'm³/h' THEN units := units || jsonb_build_object('metric', 'meter**3_per_hour', 'imperial', 'foot**3_per_hour');
+        WHEN 'L/s' THEN units := units || jsonb_build_object('metric', 'liter_per_second', 'imperial', 'gallon_per_second');
+        WHEN 'L/min' THEN units := units || jsonb_build_object('metric', 'liter_per_minute', 'imperial', 'gallon_per_minute');
+        WHEN 'bar' THEN units := units || jsonb_build_object('metric', 'bar', 'imperial', 'pound_per_square_inch');
+        WHEN 'kPa' THEN units := units || jsonb_build_object('metric', 'kilopascal', 'imperial', 'pound_per_square_inch');
+        WHEN 'MPa' THEN units := units || jsonb_build_object('metric', 'megapascal', 'imperial', 'pound_per_square_inch');
+        WHEN 'N' THEN units := units || jsonb_build_object('metric', 'newton', 'imperial', 'pound_force');
+        WHEN 'kN' THEN units := units || jsonb_build_object('metric', 'kilonewton', 'imperial', 'pound_force');
+        WHEN 'Hz' THEN units := units || jsonb_build_object('metric', 'hertz', 'imperial', 'hertz');
+        WHEN 'dB' THEN units := units || jsonb_build_object('metric', 'decibel', 'imperial', 'decibel');
+        WHEN 'lux' THEN units := units || jsonb_build_object('metric', 'lux', 'imperial', 'foot_candle');
+        WHEN 'lm' THEN units := units || jsonb_build_object('metric', 'lumen', 'imperial', 'lumen');
+        WHEN 'cd' THEN units := units || jsonb_build_object('metric', 'candela', 'imperial', 'candela');
+        WHEN 'V' THEN units := units || jsonb_build_object('metric', 'volt', 'imperial', 'volt');
+        WHEN 'A' THEN units := units || jsonb_build_object('metric', 'ampere', 'imperial', 'ampere');
+        WHEN 'Ω' THEN units := units || jsonb_build_object('metric', 'ohm', 'imperial', 'ohm');
+        WHEN 'F' THEN units := units || jsonb_build_object('metric', 'farad', 'imperial', 'farad');
+        WHEN 'H' THEN units := units || jsonb_build_object('metric', 'henry', 'imperial', 'henry');
+        WHEN 'T' THEN units := units || jsonb_build_object('metric', 'tesla', 'imperial', 'tesla');
+        WHEN 'Wb' THEN units := units || jsonb_build_object('metric', 'weber', 'imperial', 'weber');
+        WHEN 'lm/m²' THEN units := units || jsonb_build_object('metric', 'lumen_per_meter**2', 'imperial', 'lumen_per_foot**2');
+        WHEN 'cd/m²' THEN units := units || jsonb_build_object('metric', 'candela_per_meter**2', 'imperial', 'candela_per_foot**2');
+        ELSE 
+            -- Fallback: use the old unit as metric and imperial
+            units := units || jsonb_build_object('metric', COALESCE(old_unit, ''), 'imperial', COALESCE(old_unit, ''));
+    END CASE;
+    
+    -- Add units to the new parameter
+    new_param := new_param || jsonb_build_object('units', units);
+    
+    -- Handle validation constraints if present
+    IF old_param ? 'validation' AND old_param->'validation' IS NOT NULL THEN
+        DECLARE
+            validation_rules JSONB;
+        BEGIN
+            -- Try to parse validation as JSON if it's a string
+            IF jsonb_typeof(old_param->'validation') = 'string' THEN
+                BEGIN
+                    validation_rules := (old_param->>'validation')::jsonb;
+                EXCEPTION WHEN OTHERS THEN
+                    validation_rules := old_param->'validation';
+                END;
+            ELSE
+                validation_rules := old_param->'validation';
+            END IF;
+            
+            -- Extract min/max constraints
+            IF validation_rules ? 'min' THEN
+                new_param := jsonb_set(new_param, '{constraints,min}', validation_rules->'min');
+            END IF;
+            IF validation_rules ? 'max' THEN
+                new_param := jsonb_set(new_param, '{constraints,max}', validation_rules->'max');
+            END IF;
+            
+            -- Extract precision settings
+            IF validation_rules ? 'decimal_places' THEN
+                new_param := jsonb_set(new_param, '{precision,dp}', validation_rules->'decimal_places');
+            END IF;
+            IF validation_rules ? 'significant_figures' THEN
+                new_param := jsonb_set(new_param, '{precision,sf}', validation_rules->'significant_figures');
+            END IF;
+        END;
+    END IF;
+    
+    RETURN new_param;
+END;
+$$;
+
+
+ALTER FUNCTION "public"."convert_param_to_new_format"("old_param" "jsonb") OWNER TO "postgres";
+
+
+COMMENT ON FUNCTION "public"."convert_param_to_new_format"("old_param" "jsonb") IS 'Converts old ParamSchema format to new format with enhanced unit handling';
+
+
+
+CREATE OR REPLACE FUNCTION "public"."convert_schema_to_new_format"("old_schema" "jsonb") RETURNS "jsonb"
+    LANGUAGE "plpgsql"
+    AS $$
+DECLARE
+    new_schema JSONB;
+    param_key TEXT;
+    param_value JSONB;
+BEGIN
+    new_schema := '{}'::jsonb;
+    
+    IF old_schema IS NOT NULL THEN
+        FOR param_key, param_value IN SELECT * FROM jsonb_each(old_schema)
+        LOOP
+            new_schema := new_schema || jsonb_build_object(param_key, convert_param_to_new_format(param_value));
+        END LOOP;
+    END IF;
+    
+    RETURN new_schema;
+END;
+$$;
+
+
+ALTER FUNCTION "public"."convert_schema_to_new_format"("old_schema" "jsonb") OWNER TO "postgres";
+
+
+COMMENT ON FUNCTION "public"."convert_schema_to_new_format"("old_schema" "jsonb") IS 'Converts entire schema object from old to new format';
+
+
+
+CREATE OR REPLACE FUNCTION "public"."fix_param_schema_dimension"("param_schema" "jsonb") RETURNS "jsonb"
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+    -- If no units object, return as-is
+    IF NOT (param_schema ? 'units' AND param_schema->'units' IS NOT NULL) THEN
+        RETURN param_schema;
+    END IF;
+    
+    -- Fix the units object
+    RETURN jsonb_set(
+        param_schema,
+        '{units}',
+        fix_units_dimension(param_schema->'units')
+    );
+END;
+$$;
+
+
+ALTER FUNCTION "public"."fix_param_schema_dimension"("param_schema" "jsonb") OWNER TO "postgres";
+
+
+COMMENT ON FUNCTION "public"."fix_param_schema_dimension"("param_schema" "jsonb") IS 'Fixes dimension in parameter schema units';
+
+
+
+CREATE OR REPLACE FUNCTION "public"."fix_schema_dimensions"("schema_obj" "jsonb") RETURNS "jsonb"
+    LANGUAGE "plpgsql"
+    AS $$
+DECLARE
+    result JSONB;
+    param_key TEXT;
+    param_value JSONB;
+BEGIN
+    result := '{}'::jsonb;
+    
+    IF schema_obj IS NOT NULL THEN
+        FOR param_key, param_value IN SELECT * FROM jsonb_each(schema_obj)
+        LOOP
+            result := result || jsonb_build_object(param_key, fix_param_schema_dimension(param_value));
+        END LOOP;
+    END IF;
+    
+    RETURN result;
+END;
+$$;
+
+
+ALTER FUNCTION "public"."fix_schema_dimensions"("schema_obj" "jsonb") OWNER TO "postgres";
+
+
+COMMENT ON FUNCTION "public"."fix_schema_dimensions"("schema_obj" "jsonb") IS 'Fixes dimensions in entire schema objects';
+
+
+
+CREATE OR REPLACE FUNCTION "public"."fix_units_dimension"("units_obj" "jsonb") RETURNS "jsonb"
+    LANGUAGE "plpgsql"
+    AS $$
+DECLARE
+    metric_unit TEXT;
+    dimension TEXT;
+    result JSONB;
+BEGIN
+    -- If already has dimension, return as-is
+    IF units_obj ? 'dimension' AND units_obj->>'dimension' IS NOT NULL AND units_obj->>'dimension' != '' THEN
+        RETURN units_obj;
+    END IF;
+    
+    -- Get metric unit
+    metric_unit := units_obj->>'metric';
+    
+    IF metric_unit IS NULL OR metric_unit = '' THEN
+        RETURN units_obj;
+    END IF;
+    
+    -- Get dimension from unit
+    dimension := get_dimension_from_unit(metric_unit);
+    
+    IF dimension IS NULL THEN
+        RETURN units_obj;
+    END IF;
+    
+    -- Add dimension to units object
+    result := units_obj || jsonb_build_object('dimension', dimension);
+    
+    RETURN result;
+END;
+$$;
+
+
+ALTER FUNCTION "public"."fix_units_dimension"("units_obj" "jsonb") OWNER TO "postgres";
+
+
+COMMENT ON FUNCTION "public"."fix_units_dimension"("units_obj" "jsonb") IS 'Adds dimension attribute to units objects';
+
+
+
 CREATE OR REPLACE FUNCTION "public"."get_admin_users"() RETURNS TABLE("id" "uuid", "email" "text", "full_name" "text", "is_admin" boolean, "created_at" timestamp with time zone)
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
@@ -106,6 +366,222 @@ $$;
 
 
 ALTER FUNCTION "public"."get_admin_users"() OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."get_dimension_from_unit"("unit" "text") RETURNS "text"
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+    -- Comprehensive mapping of units to dimensions
+    CASE LOWER(TRIM(unit))
+        -- Length/Distance
+        WHEN 'm', 'meter', 'meters', 'mm', 'millimeter', 'millimeters', 
+             'cm', 'centimeter', 'centimeters', 'km', 'kilometer', 'kilometers',
+             'ft', 'foot', 'feet', 'in', 'inch', 'inches', 'yd', 'yard', 'yards'
+        THEN RETURN 'length';
+        
+        -- Area
+        WHEN 'm²', 'meter**2', 'square_meter', 'square_meters',
+             'mm²', 'millimeter**2', 'square_millimeter',
+             'cm²', 'centimeter**2', 'square_centimeter',
+             'km²', 'kilometer**2', 'square_kilometer',
+             'ft²', 'foot**2', 'square_foot', 'square_feet',
+             'in²', 'inch**2', 'square_inch', 'square_inches'
+        THEN RETURN 'area';
+        
+        -- Volume
+        WHEN 'm³', 'meter**3', 'cubic_meter', 'cubic_meters',
+             'mm³', 'millimeter**3', 'cubic_millimeter',
+             'cm³', 'centimeter**3', 'cubic_centimeter',
+             'l', 'liter', 'liters', 'ft³', 'foot**3', 'cubic_foot', 'cubic_feet',
+             'in³', 'inch**3', 'cubic_inch', 'cubic_inches',
+             'gal', 'gallon', 'gallons'
+        THEN RETURN 'volume';
+        
+        -- Mass
+        WHEN 'kg', 'kilogram', 'kilograms', 'g', 'gram', 'grams',
+             'mg', 'milligram', 'milligrams', 't', 'tonne', 'tonnes',
+             'lb', 'pound', 'pounds', 'oz', 'ounce', 'ounces'
+        THEN RETURN 'mass';
+        
+        -- Time
+        WHEN 's', 'second', 'seconds', 'min', 'minute', 'minutes',
+             'h', 'hour', 'hours', 'day', 'days', 'week', 'weeks',
+             'month', 'months', 'year', 'years'
+        THEN RETURN 'time';
+        
+        -- Frequency
+        WHEN 'hz', 'hertz', '1/s', 'per_second', '1/min', 'per_minute',
+             '1/h', 'per_hour', 'rpm', 'revolutions_per_minute'
+        THEN RETURN 'frequency';
+        
+        -- Velocity/Speed
+        WHEN 'm/s', 'meter_per_second', 'km/h', 'kilometer_per_hour',
+             'ft/s', 'foot_per_second', 'mph', 'mile_per_hour'
+        THEN RETURN 'velocity';
+        
+        -- Acceleration
+        WHEN 'm/s²', 'meter_per_second**2', 'ft/s²', 'foot_per_second**2'
+        THEN RETURN 'acceleration';
+        
+        -- Force
+        WHEN 'n', 'newton', 'newtons', 'kn', 'kilonewton', 'kilonewtons',
+             'lbf', 'pound_force', 'pounds_force'
+        THEN RETURN 'force';
+        
+        -- Pressure
+        WHEN 'pa', 'pascal', 'pascals', 'kpa', 'kilopascal', 'kilopascals',
+             'mpa', 'megapascal', 'megapascals', 'bar', 'bars',
+             'psi', 'pound_per_square_inch', 'psf', 'pound_per_square_foot',
+             'atm', 'atmosphere', 'atmospheres', 'torr', 'mmhg', 'millimeter_of_mercury',
+             'inhg', 'inch_of_mercury'
+        THEN RETURN 'pressure';
+        
+        -- Energy
+        WHEN 'j', 'joule', 'joules', 'kj', 'kilojoule', 'kilojoules',
+             'mj', 'megajoule', 'megajoules', 'wh', 'watt_hour', 'watt_hours',
+             'kwh', 'kilowatt_hour', 'kilowatt_hours', 'mwh', 'megawatt_hour', 'megawatt_hours',
+             'btu', 'cal', 'calorie', 'calories', 'kcal', 'kilocalorie', 'kilocalories'
+        THEN RETURN 'energy';
+        
+        -- Power
+        WHEN 'w', 'watt', 'watts', 'kw', 'kilowatt', 'kilowatts',
+             'mw', 'megawatt', 'megawatts', 'hp', 'horsepower',
+             'btu/h', 'btu_per_hour', 'btu/hr'
+        THEN RETURN 'power';
+        
+        -- Temperature
+        WHEN 'k', 'kelvin', '°c', 'celsius', '°f', 'fahrenheit', '°r', 'rankine'
+        THEN RETURN 'temperature';
+        
+        -- Flow Rate (Volume per time)
+        WHEN 'm³/s', 'meter**3_per_second', 'm³/h', 'meter**3_per_hour',
+             'l/s', 'liter_per_second', 'l/min', 'liter_per_minute',
+             'l/h', 'liter_per_hour', 'ft³/s', 'foot**3_per_second',
+             'ft³/min', 'foot**3_per_minute', 'ft³/h', 'foot**3_per_hour',
+             'cfm', 'cubic_feet_per_minute', 'cfh', 'cubic_feet_per_hour',
+             'gpm', 'gallon_per_minute', 'gph', 'gallon_per_hour',
+             'gps', 'gallon_per_second'
+        THEN RETURN 'flow_rate';
+        
+        -- Mass Flow Rate
+        WHEN 'kg/s', 'kilogram_per_second', 'kg/min', 'kilogram_per_minute',
+             'kg/h', 'kilogram_per_hour', 'lb/s', 'pound_per_second',
+             'lb/min', 'pound_per_minute', 'lb/h', 'pound_per_hour'
+        THEN RETURN 'mass_flow_rate';
+        
+        -- Density
+        WHEN 'kg/m³', 'kilogram_per_meter**3', 'g/cm³', 'gram_per_centimeter**3',
+             'lb/ft³', 'pound_per_foot**3', 'lb/gal', 'pound_per_gallon'
+        THEN RETURN 'density';
+        
+        -- Specific Volume
+        WHEN 'm³/kg', 'meter**3_per_kilogram', 'ft³/lb', 'foot**3_per_pound'
+        THEN RETURN 'specific_volume';
+        
+        -- Dynamic Viscosity
+        WHEN 'pa·s', 'pascal_second', 'cp', 'centipoise', 'p', 'poise'
+        THEN RETURN 'dynamic_viscosity';
+        
+        -- Kinematic Viscosity
+        WHEN 'm²/s', 'meter**2_per_second', 'cst', 'centistokes', 'st', 'stokes'
+        THEN RETURN 'kinematic_viscosity';
+        
+        -- Thermal Conductivity
+        WHEN 'w/(m·k)', 'watt_per_meter_kelvin', 'w/(m·°c)', 'watt_per_meter_celsius',
+             'btu/(h·ft·°f)', 'btu_per_hour_per_foot_fahrenheit'
+        THEN RETURN 'thermal_conductivity';
+        
+        -- Heat Transfer Coefficient
+        WHEN 'w/(m²·k)', 'watt_per_meter**2_kelvin', 'w/(m²·°c)', 'watt_per_meter**2_celsius',
+             'btu/(h·ft²·°f)', 'btu_per_hour_per_foot**2_fahrenheit'
+        THEN RETURN 'heat_transfer_coefficient';
+        
+        -- Specific Heat Capacity
+        WHEN 'j/(kg·k)', 'joule_per_kilogram_kelvin', 'j/(kg·°c)', 'joule_per_kilogram_celsius',
+             'btu/(lb·°f)', 'btu_per_pound_fahrenheit', 'cal/(g·°c)', 'calorie_per_gram_celsius'
+        THEN RETURN 'specific_heat_capacity';
+        
+        -- Electrical
+        WHEN 'a', 'ampere', 'amperes'
+        THEN RETURN 'electric_current';
+        WHEN 'v', 'volt', 'volts'
+        THEN RETURN 'electric_potential';
+        WHEN 'ω', 'ohm', 'ohms'
+        THEN RETURN 'electric_resistance';
+        WHEN 'f', 'farad', 'farads'
+        THEN RETURN 'electric_capacitance';
+        WHEN 'h', 'henry', 'henries'
+        THEN RETURN 'electric_inductance';
+        WHEN 'c', 'coulomb', 'coulombs'
+        THEN RETURN 'electric_charge';
+        
+        -- Magnetic
+        WHEN 't', 'tesla', 'teslas'
+        THEN RETURN 'magnetic_field';
+        WHEN 'wb', 'weber', 'webers'
+        THEN RETURN 'magnetic_flux';
+        
+        -- Luminous
+        WHEN 'cd', 'candela', 'candelas'
+        THEN RETURN 'luminous_intensity';
+        WHEN 'lm', 'lumen', 'lumens'
+        THEN RETURN 'luminous_flux';
+        WHEN 'lx', 'lux', 'fc', 'foot_candle', 'foot_candles'
+        THEN RETURN 'illuminance';
+        WHEN 'cd/m²', 'candela_per_meter**2', 'cd/ft²', 'candela_per_foot**2'
+        THEN RETURN 'luminance';
+        
+        -- Sound
+        WHEN 'db', 'decibel', 'decibels'
+        THEN RETURN 'sound_level';
+        
+        -- Dimensionless
+        WHEN '1', 'ratio', 'percent', '%', 'ppm', 'parts_per_million',
+             'ppb', 'parts_per_billion'
+        THEN RETURN 'dimensionless';
+        
+        ELSE
+            -- Try to infer from patterns
+            IF unit LIKE '%per_second%' OR unit LIKE '%/s%' THEN
+                IF unit LIKE '%meter**3%' OR unit LIKE '%m³%' THEN
+                    RETURN 'flow_rate';
+                ELSIF unit LIKE '%kilogram%' OR unit LIKE '%kg%' THEN
+                    RETURN 'mass_flow_rate';
+                ELSIF unit LIKE '%meter**2%' OR unit LIKE '%m²%' THEN
+                    RETURN 'kinematic_viscosity';
+                ELSE
+                    RETURN 'frequency';
+                END IF;
+            ELSIF unit LIKE '%per_hour%' OR unit LIKE '%/h%' THEN
+                IF unit LIKE '%meter**3%' OR unit LIKE '%m³%' THEN
+                    RETURN 'flow_rate';
+                ELSIF unit LIKE '%kilogram%' OR unit LIKE '%kg%' THEN
+                    RETURN 'mass_flow_rate';
+                ELSE
+                    RETURN 'frequency';
+                END IF;
+            ELSIF unit LIKE '%per_minute%' OR unit LIKE '%/min%' THEN
+                IF unit LIKE '%meter**3%' OR unit LIKE '%m³%' THEN
+                    RETURN 'flow_rate';
+                ELSIF unit LIKE '%kilogram%' OR unit LIKE '%kg%' THEN
+                    RETURN 'mass_flow_rate';
+                ELSE
+                    RETURN 'frequency';
+                END IF;
+            END IF;
+            
+            RETURN NULL;
+    END CASE;
+END;
+$$;
+
+
+ALTER FUNCTION "public"."get_dimension_from_unit"("unit" "text") OWNER TO "postgres";
+
+
+COMMENT ON FUNCTION "public"."get_dimension_from_unit"("unit" "text") IS 'Maps units to their physical dimensions';
+
 
 SET default_tablespace = '';
 
@@ -767,14 +1243,18 @@ CREATE TABLE IF NOT EXISTS "public"."calculation_metadata" (
     "category" "text" DEFAULT 'Other'::"text",
     "subcategory" "text",
     "guidance" "text" DEFAULT '''{}''::text[]'::"text",
-    "checked" boolean DEFAULT false NOT NULL
+    "checked" boolean DEFAULT false NOT NULL,
+    "input_schema_old" "jsonb",
+    "output_schema_old" "jsonb",
+    "input_schema_new" "jsonb",
+    "output_schema_new" "jsonb"
 );
 
 
 ALTER TABLE "public"."calculation_metadata" OWNER TO "postgres";
 
 
-COMMENT ON TABLE "public"."calculation_metadata" IS 'Calculation metadata table - cleaned up duplicate columns, symbol field now in ParamSchema';
+COMMENT ON TABLE "public"."calculation_metadata" IS 'Calculation metadata table - updated with new schema format for enhanced unit handling';
 
 
 
@@ -787,6 +1267,22 @@ COMMENT ON COLUMN "public"."calculation_metadata"."output_schema" IS 'Output par
 
 
 COMMENT ON COLUMN "public"."calculation_metadata"."checked" IS 'Boolean flag indicating if the calculation has been checked/reviewed';
+
+
+
+COMMENT ON COLUMN "public"."calculation_metadata"."input_schema_old" IS 'Backup of original input_schema format';
+
+
+
+COMMENT ON COLUMN "public"."calculation_metadata"."output_schema_old" IS 'Backup of original output_schema format';
+
+
+
+COMMENT ON COLUMN "public"."calculation_metadata"."input_schema_new" IS 'New input_schema format with enhanced unit handling (dimension, metric, imperial)';
+
+
+
+COMMENT ON COLUMN "public"."calculation_metadata"."output_schema_new" IS 'New output_schema format with enhanced unit handling (dimension, metric, imperial)';
 
 
 
@@ -1725,9 +2221,45 @@ GRANT ALL ON FUNCTION "public"."can_user_run_calculation"("user_uuid" "uuid") TO
 
 
 
+GRANT ALL ON FUNCTION "public"."convert_param_to_new_format"("old_param" "jsonb") TO "anon";
+GRANT ALL ON FUNCTION "public"."convert_param_to_new_format"("old_param" "jsonb") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."convert_param_to_new_format"("old_param" "jsonb") TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."convert_schema_to_new_format"("old_schema" "jsonb") TO "anon";
+GRANT ALL ON FUNCTION "public"."convert_schema_to_new_format"("old_schema" "jsonb") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."convert_schema_to_new_format"("old_schema" "jsonb") TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."fix_param_schema_dimension"("param_schema" "jsonb") TO "anon";
+GRANT ALL ON FUNCTION "public"."fix_param_schema_dimension"("param_schema" "jsonb") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."fix_param_schema_dimension"("param_schema" "jsonb") TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."fix_schema_dimensions"("schema_obj" "jsonb") TO "anon";
+GRANT ALL ON FUNCTION "public"."fix_schema_dimensions"("schema_obj" "jsonb") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."fix_schema_dimensions"("schema_obj" "jsonb") TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."fix_units_dimension"("units_obj" "jsonb") TO "anon";
+GRANT ALL ON FUNCTION "public"."fix_units_dimension"("units_obj" "jsonb") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."fix_units_dimension"("units_obj" "jsonb") TO "service_role";
+
+
+
 GRANT ALL ON FUNCTION "public"."get_admin_users"() TO "anon";
 GRANT ALL ON FUNCTION "public"."get_admin_users"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."get_admin_users"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."get_dimension_from_unit"("unit" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."get_dimension_from_unit"("unit" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_dimension_from_unit"("unit" "text") TO "service_role";
 
 
 
