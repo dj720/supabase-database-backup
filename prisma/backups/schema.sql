@@ -753,6 +753,177 @@ $$;
 ALTER FUNCTION "public"."is_super_admin"("user_id" "uuid") OWNER TO "postgres";
 
 
+CREATE OR REPLACE FUNCTION "public"."normalize_unit"("unit_text" "text") RETURNS "text"
+    LANGUAGE "plpgsql" IMMUTABLE
+    AS $$
+BEGIN
+    -- Return NULL/empty as-is
+    IF unit_text IS NULL OR unit_text = '' THEN
+        RETURN unit_text;
+    END IF;
+    
+    -- Length units
+    IF unit_text = 'meter' THEN RETURN 'm'; END IF;
+    IF unit_text = 'millimeter' THEN RETURN 'mm'; END IF;
+    IF unit_text = 'centimeter' THEN RETURN 'cm'; END IF;
+    IF unit_text = 'kilometer' THEN RETURN 'km'; END IF;
+    IF unit_text = 'inch' THEN RETURN 'in'; END IF;
+    IF unit_text = 'foot' THEN RETURN 'ft'; END IF;
+    IF unit_text = 'yard' THEN RETURN 'yd'; END IF;
+    IF unit_text = 'mile' THEN RETURN 'mi'; END IF;
+    
+    -- Area units
+    IF unit_text = 'meter**2' THEN RETURN 'm²'; END IF;
+    IF unit_text = 'centimeter**2' THEN RETURN 'cm²'; END IF;
+    IF unit_text = 'kilometer**2' THEN RETURN 'km²'; END IF;
+    IF unit_text = 'inch**2' THEN RETURN 'in²'; END IF;
+    IF unit_text = 'foot**2' THEN RETURN 'ft²'; END IF;
+    IF unit_text = 'yard**2' THEN RETURN 'yd²'; END IF;
+    IF unit_text = 'hectare' THEN RETURN 'ha'; END IF;
+    
+    -- Volume units
+    IF unit_text = 'meter**3' THEN RETURN 'm³'; END IF;
+    IF unit_text = 'centimeter**3' THEN RETURN 'cm³'; END IF;
+    IF unit_text = 'foot**3' THEN RETURN 'ft³'; END IF;
+    IF unit_text = 'liter' OR unit_text = 'L' THEN RETURN 'l'; END IF;
+    IF unit_text = 'milliliter' OR unit_text = 'mL' THEN RETURN 'ml'; END IF;
+    
+    -- Mass units
+    IF unit_text = 'kilogram' THEN RETURN 'kg'; END IF;
+    IF unit_text = 'gram' THEN RETURN 'g'; END IF;
+    IF unit_text = 'tonne' OR unit_text = 'metric_ton' THEN RETURN 't'; END IF;
+    IF unit_text = 'pound' THEN RETURN 'lb'; END IF;
+    IF unit_text = 'ounce' THEN RETURN 'oz'; END IF;
+    
+    -- Time units
+    IF unit_text = 'second' THEN RETURN 's'; END IF;
+    IF unit_text = 'minute' THEN RETURN 'min'; END IF;
+    IF unit_text = 'hour' THEN RETURN 'h'; END IF;
+    IF unit_text = 'day' THEN RETURN 'd'; END IF;
+    
+    -- Temperature units
+    IF unit_text = 'kelvin' OR unit_text = 'K' THEN RETURN 'K'; END IF;
+    IF unit_text = 'degree_Celsius' OR unit_text = 'celsius' OR unit_text = 'degC' THEN RETURN '°C'; END IF;
+    IF unit_text = 'degree_Fahrenheit' OR unit_text = 'fahrenheit' OR unit_text = 'degF' THEN RETURN '°F'; END IF;
+    IF unit_text = 'degree_Rankine' OR unit_text = 'rankine' OR unit_text = 'degR' THEN RETURN '°R'; END IF;
+    
+    -- Pressure units
+    IF unit_text = 'pascal' THEN RETURN 'Pa'; END IF;
+    IF unit_text = 'kilopascal' THEN RETURN 'kPa'; END IF;
+    IF unit_text = 'megapascal' THEN RETURN 'MPa'; END IF;
+    IF unit_text = 'pound_force_per_square_inch' THEN RETURN 'psi'; END IF;
+    
+    -- Force units
+    IF unit_text = 'newton' THEN RETURN 'N'; END IF;
+    IF unit_text = 'kilonewton' THEN RETURN 'kN'; END IF;
+    IF unit_text = 'meganewton' THEN RETURN 'MN'; END IF;
+    IF unit_text = 'pound_force' THEN RETURN 'lbf'; END IF;
+    
+    -- Energy units
+    IF unit_text = 'joule' THEN RETURN 'J'; END IF;
+    IF unit_text = 'kilojoule' THEN RETURN 'kJ'; END IF;
+    IF unit_text = 'megajoule' THEN RETURN 'MJ'; END IF;
+    IF unit_text = 'kilowatt_hour' THEN RETURN 'kWh'; END IF;
+    IF unit_text = 'british_thermal_unit' OR unit_text = 'BTU' THEN RETURN 'Btu'; END IF;
+    IF unit_text = 'therm' THEN RETURN 'thm'; END IF;
+    IF unit_text = 'calorie' THEN RETURN 'cal'; END IF;
+    
+    -- Power units
+    IF unit_text = 'watt' THEN RETURN 'W'; END IF;
+    IF unit_text = 'kilowatt' THEN RETURN 'kW'; END IF;
+    IF unit_text = 'megawatt' THEN RETURN 'MW'; END IF;
+    IF unit_text = 'horsepower' THEN RETURN 'hp'; END IF;
+    
+    -- Velocity units
+    IF unit_text = 'meter/second' OR unit_text = 'meter_per_second' THEN RETURN 'm/s'; END IF;
+    IF unit_text = 'kilometer/hour' OR unit_text = 'kilometer_per_hour' THEN RETURN 'km/h'; END IF;
+    IF unit_text = 'foot/second' OR unit_text = 'foot_per_second' THEN RETURN 'ft/s'; END IF;
+    IF unit_text = 'mile/hour' OR unit_text = 'mile_per_hour' THEN RETURN 'mi/h'; END IF;
+    
+    -- Acceleration units
+    IF unit_text = 'meter/second**2' OR unit_text = 'meter_per_second_squared' THEN RETURN 'm/s²'; END IF;
+    IF unit_text = 'foot/second**2' OR unit_text = 'foot_per_second_squared' THEN RETURN 'ft/s²'; END IF;
+    IF unit_text = 'standard_gravity' THEN RETURN 'g'; END IF;
+    
+    -- Flow rate units
+    IF unit_text = 'meter**3/second' OR unit_text = 'meter_cubed_per_second' OR unit_text = 'm3s' THEN RETURN 'm³/s'; END IF;
+    IF unit_text = 'meter**3/hour' OR unit_text = 'm3h' THEN RETURN 'm³/h'; END IF;
+    IF unit_text = 'meter**3/minute' OR unit_text = 'm3/min' THEN RETURN 'm³/min'; END IF;
+    IF unit_text = 'liter/second' OR unit_text = 'l/s' THEN RETURN 'l/s'; END IF;
+    IF unit_text = 'liter/minute' OR unit_text = 'lpm' OR unit_text = 'l/min' THEN RETURN 'l/min'; END IF;
+    IF unit_text = 'liter/hour' OR unit_text = 'l/h' THEN RETURN 'l/h'; END IF;
+    IF unit_text = 'gallon/minute' OR unit_text = 'gpm' THEN RETURN 'gpm'; END IF;
+    IF unit_text = 'gallon/hour' OR unit_text = 'gph' THEN RETURN 'gph'; END IF;
+    IF unit_text = 'gallon/second' OR unit_text = 'gps' THEN RETURN 'gps'; END IF;
+    IF unit_text = 'cubic_foot/minute' OR unit_text = 'cfm' THEN RETURN 'cfm'; END IF;
+    IF unit_text = 'cubic_foot/hour' OR unit_text = 'cfh' THEN RETURN 'cfh'; END IF;
+    IF unit_text = 'foot**3/second' OR unit_text = 'ft³/s' THEN RETURN 'ft³/s'; END IF;
+    IF unit_text = 'foot**3/minute' OR unit_text = 'ft³/min' THEN RETURN 'ft³/min'; END IF;
+    IF unit_text = 'foot**3/hour' OR unit_text = 'ft³/h' THEN RETURN 'ft³/h'; END IF;
+    
+    -- Additional ** format flow rate units
+    IF unit_text = 'meter**3_per_second' THEN RETURN 'm³/s'; END IF;
+    IF unit_text = 'meter**3_per_hour' THEN RETURN 'm³/h'; END IF;
+    IF unit_text = 'meter**3_per_minute' THEN RETURN 'm³/min'; END IF;
+    IF unit_text = 'foot**3_per_second' THEN RETURN 'ft³/s'; END IF;
+    IF unit_text = 'foot**3_per_minute' THEN RETURN 'ft³/min'; END IF;
+    IF unit_text = 'foot**3_per_hour' THEN RETURN 'ft³/h'; END IF;
+    
+    -- Mass flow rate units
+    IF unit_text = 'kilogram/second' OR unit_text = 'kg_s' THEN RETURN 'kg/s'; END IF;
+    IF unit_text = 'kilogram/hour' OR unit_text = 'kg_h' THEN RETURN 'kg/h'; END IF;
+    IF unit_text = 'kilogram/minute' OR unit_text = 'kg/min' THEN RETURN 'kg/min'; END IF;
+    IF unit_text = 'gram/second' OR unit_text = 'g_s' THEN RETURN 'g/s'; END IF;
+    IF unit_text = 'pound/second' OR unit_text = 'lb_s' THEN RETURN 'lb/s'; END IF;
+    IF unit_text = 'pound/hour' OR unit_text = 'lb_h' THEN RETURN 'lb/h'; END IF;
+    IF unit_text = 'pound/minute' OR unit_text = 'lb/min' THEN RETURN 'lb/min'; END IF;
+    
+    -- Density units
+    IF unit_text = 'kilogram/meter**3' THEN RETURN 'kg/m³'; END IF;
+    IF unit_text = 'gram/centimeter**3' THEN RETURN 'g/cm³'; END IF;
+    IF unit_text = 'gram/liter' THEN RETURN 'g/l'; END IF;
+    IF unit_text = 'pound/foot**3' THEN RETURN 'lb/ft³'; END IF;
+    IF unit_text = 'pound/gallon' THEN RETURN 'lb/gal'; END IF;
+    
+    -- Viscosity units
+    IF unit_text = 'pascal*second' OR unit_text = 'pascal_second' THEN RETURN 'Pa·s'; END IF;
+    IF unit_text = 'centipoise' OR unit_text = 'cP' THEN RETURN 'cP'; END IF;
+    IF unit_text = 'poise' OR unit_text = 'P' THEN RETURN 'P'; END IF;
+    
+    -- Frequency units
+    IF unit_text = 'hertz' THEN RETURN 'Hz'; END IF;
+    IF unit_text = 'kilohertz' THEN RETURN 'kHz'; END IF;
+    IF unit_text = 'megahertz' THEN RETURN 'MHz'; END IF;
+    
+    -- Angle units
+    IF unit_text = 'radian' THEN RETURN 'rad'; END IF;
+    IF unit_text = 'degree' THEN RETURN 'deg'; END IF;
+    
+    -- Electrical units
+    IF unit_text = 'ampere' THEN RETURN 'A'; END IF;
+    IF unit_text = 'volt' THEN RETURN 'V'; END IF;
+    IF unit_text = 'ohm' THEN RETURN 'Ω'; END IF;
+    IF unit_text = 'farad' THEN RETURN 'F'; END IF;
+    IF unit_text = 'henry' THEN RETURN 'H'; END IF;
+    
+    -- Light units
+    IF unit_text = 'candela' THEN RETURN 'cd'; END IF;
+    IF unit_text = 'lumen' THEN RETURN 'lm'; END IF;
+    IF unit_text = 'lux' THEN RETURN 'lx'; END IF;
+    IF unit_text = 'footcandle' THEN RETURN 'fc'; END IF;
+    
+    -- Sound level
+    IF unit_text = 'decibel' THEN RETURN 'dB'; END IF;
+    
+    -- If no mapping found, return original
+    RETURN unit_text;
+END;
+$$;
+
+
+ALTER FUNCTION "public"."normalize_unit"("unit_text" "text") OWNER TO "postgres";
+
+
 CREATE OR REPLACE FUNCTION "public"."reset_user_calculation_count"("user_uuid" "uuid") RETURNS "public"."user_calculation_limits"
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
@@ -2302,6 +2473,12 @@ GRANT ALL ON FUNCTION "public"."is_admin"("user_id" "uuid") TO "service_role";
 GRANT ALL ON FUNCTION "public"."is_super_admin"("user_id" "uuid") TO "anon";
 GRANT ALL ON FUNCTION "public"."is_super_admin"("user_id" "uuid") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."is_super_admin"("user_id" "uuid") TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."normalize_unit"("unit_text" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."normalize_unit"("unit_text" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."normalize_unit"("unit_text" "text") TO "service_role";
 
 
 
