@@ -811,7 +811,7 @@ BEGIN
     IF unit_text = 'pascal' THEN RETURN 'Pa'; END IF;
     IF unit_text = 'kilopascal' THEN RETURN 'kPa'; END IF;
     IF unit_text = 'megapascal' THEN RETURN 'MPa'; END IF;
-    IF unit_text = 'pound_force_per_square_inch' THEN RETURN 'psi'; END IF;
+    IF unit_text = 'pound_force_per_square_inch' OR unit_text = 'pound_per_square_inch' THEN RETURN 'psi'; END IF;
     
     -- Force units
     IF unit_text = 'newton' THEN RETURN 'N'; END IF;
@@ -833,6 +833,7 @@ BEGIN
     IF unit_text = 'kilowatt' THEN RETURN 'kW'; END IF;
     IF unit_text = 'megawatt' THEN RETURN 'MW'; END IF;
     IF unit_text = 'horsepower' THEN RETURN 'hp'; END IF;
+    IF unit_text = 'btu_per_hour' THEN RETURN 'Btu/h'; END IF;
     
     -- Velocity units
     IF unit_text = 'meter/second' OR unit_text = 'meter_per_second' THEN RETURN 'm/s'; END IF;
@@ -849,12 +850,12 @@ BEGIN
     IF unit_text = 'meter**3/second' OR unit_text = 'meter_cubed_per_second' OR unit_text = 'm3s' THEN RETURN 'm³/s'; END IF;
     IF unit_text = 'meter**3/hour' OR unit_text = 'm3h' THEN RETURN 'm³/h'; END IF;
     IF unit_text = 'meter**3/minute' OR unit_text = 'm3/min' THEN RETURN 'm³/min'; END IF;
-    IF unit_text = 'liter/second' OR unit_text = 'l/s' THEN RETURN 'l/s'; END IF;
+    IF unit_text = 'liter/second' OR unit_text = 'liter_per_second' OR unit_text = 'l/s' THEN RETURN 'l/s'; END IF;
     IF unit_text = 'liter/minute' OR unit_text = 'lpm' OR unit_text = 'l/min' THEN RETURN 'l/min'; END IF;
     IF unit_text = 'liter/hour' OR unit_text = 'l/h' THEN RETURN 'l/h'; END IF;
     IF unit_text = 'gallon/minute' OR unit_text = 'gpm' THEN RETURN 'gpm'; END IF;
     IF unit_text = 'gallon/hour' OR unit_text = 'gph' THEN RETURN 'gph'; END IF;
-    IF unit_text = 'gallon/second' OR unit_text = 'gps' THEN RETURN 'gps'; END IF;
+    IF unit_text = 'gallon/second' OR unit_text = 'gallon_per_second' OR unit_text = 'gps' THEN RETURN 'gps'; END IF;
     IF unit_text = 'cubic_foot/minute' OR unit_text = 'cfm' THEN RETURN 'cfm'; END IF;
     IF unit_text = 'cubic_foot/hour' OR unit_text = 'cfh' THEN RETURN 'cfh'; END IF;
     IF unit_text = 'foot**3/second' OR unit_text = 'ft³/s' THEN RETURN 'ft³/s'; END IF;
@@ -879,10 +880,10 @@ BEGIN
     IF unit_text = 'pound/minute' OR unit_text = 'lb/min' THEN RETURN 'lb/min'; END IF;
     
     -- Density units
-    IF unit_text = 'kilogram/meter**3' THEN RETURN 'kg/m³'; END IF;
+    IF unit_text = 'kilogram/meter**3' OR unit_text = 'kilogram_per_meter**3' THEN RETURN 'kg/m³'; END IF;
     IF unit_text = 'gram/centimeter**3' THEN RETURN 'g/cm³'; END IF;
     IF unit_text = 'gram/liter' THEN RETURN 'g/l'; END IF;
-    IF unit_text = 'pound/foot**3' THEN RETURN 'lb/ft³'; END IF;
+    IF unit_text = 'pound/foot**3' OR unit_text = 'pound_per_foot**3' THEN RETURN 'lb/ft³'; END IF;
     IF unit_text = 'pound/gallon' THEN RETURN 'lb/gal'; END IF;
     
     -- Viscosity units
@@ -914,6 +915,14 @@ BEGIN
     
     -- Sound level
     IF unit_text = 'decibel' THEN RETURN 'dB'; END IF;
+    
+    -- Thermal conductivity units
+    IF unit_text = 'watt_per_meter_kelvin' THEN RETURN 'W/m/K'; END IF;
+    IF unit_text = 'btu_per_hour_per_foot_fahrenheit' THEN RETURN 'Btu/ft/h/°F'; END IF;
+    
+    -- Heat transfer coefficient units
+    IF unit_text = 'watt_per_meter**2_kelvin' THEN RETURN 'W/m²/K'; END IF;
+    IF unit_text = 'btu_per_hour_per_foot**2_fahrenheit' THEN RETURN 'Btu/ft²/h/°F'; END IF;
     
     -- If no mapping found, return original
     RETURN unit_text;
@@ -1455,6 +1464,34 @@ COMMENT ON COLUMN "public"."calculation_metadata"."input_schema_new" IS 'New inp
 
 COMMENT ON COLUMN "public"."calculation_metadata"."output_schema_new" IS 'New output_schema format with enhanced unit handling (dimension, metric, imperial)';
 
+
+
+CREATE TABLE IF NOT EXISTS "public"."calculation_metadata_backup_20251001" (
+    "calc_id" "text",
+    "name" "text",
+    "description" "text",
+    "latex" "text",
+    "diagram_path" "text",
+    "tags" "text"[],
+    "input_schema" "jsonb",
+    "output_schema" "jsonb",
+    "references" "text"[],
+    "related_calcs" "text"[],
+    "created_at" timestamp with time zone,
+    "updated_at" timestamp with time zone,
+    "uuid" "uuid",
+    "category" "text",
+    "subcategory" "text",
+    "guidance" "text",
+    "checked" boolean,
+    "input_schema_old" "jsonb",
+    "output_schema_old" "jsonb",
+    "input_schema_new" "jsonb",
+    "output_schema_new" "jsonb"
+);
+
+
+ALTER TABLE "public"."calculation_metadata_backup_20251001" OWNER TO "postgres";
 
 
 CREATE TABLE IF NOT EXISTS "public"."calculation_results" (
@@ -2566,6 +2603,12 @@ GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public".
 GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calculation_metadata" TO "anon";
 GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calculation_metadata" TO "authenticated";
 GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calculation_metadata" TO "service_role";
+
+
+
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calculation_metadata_backup_20251001" TO "anon";
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calculation_metadata_backup_20251001" TO "authenticated";
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calculation_metadata_backup_20251001" TO "service_role";
 
 
 
