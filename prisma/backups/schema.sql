@@ -1503,11 +1503,38 @@ CREATE TABLE IF NOT EXISTS "public"."calculation_results" (
     "inputs" "jsonb" NOT NULL,
     "outputs" "jsonb" NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "calculation_metadata_id" "uuid"
+    "calculation_metadata_id" "uuid",
+    "input_units" "jsonb",
+    "outputs_si" "jsonb",
+    "output_units" "jsonb"
 );
 
 
 ALTER TABLE "public"."calculation_results" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."calculation_results" IS 'Calculation results table - updated with enhanced units metadata for input units, SI outputs, and defined output units';
+
+
+
+COMMENT ON COLUMN "public"."calculation_results"."inputs" IS 'Input values with units metadata (e.g., {"volume": 100, "pressure": 15})';
+
+
+
+COMMENT ON COLUMN "public"."calculation_results"."outputs" IS 'Output values with units metadata (e.g., {"flow_rate": 2.5, "power": 1500})';
+
+
+
+COMMENT ON COLUMN "public"."calculation_results"."input_units" IS 'Units used for input values (e.g., {"volume": "ft³", "pressure": "psi"})';
+
+
+
+COMMENT ON COLUMN "public"."calculation_results"."outputs_si" IS 'Output values converted to SI base units for consistency';
+
+
+
+COMMENT ON COLUMN "public"."calculation_results"."output_units" IS 'User-defined output units for display (e.g., {"flow_rate": "gpm", "power": "hp"})';
+
 
 
 CREATE TABLE IF NOT EXISTS "public"."feedback" (
