@@ -1424,8 +1424,6 @@ CREATE TABLE IF NOT EXISTS "public"."calculation_metadata" (
     "subcategory" "text",
     "guidance" "text" DEFAULT '''{}''::text[]'::"text",
     "checked" boolean DEFAULT false NOT NULL,
-    "input_schema_old" "jsonb",
-    "output_schema_old" "jsonb",
     "input_schema_new" "jsonb",
     "output_schema_new" "jsonb"
 );
@@ -1447,14 +1445,6 @@ COMMENT ON COLUMN "public"."calculation_metadata"."output_schema" IS 'Output par
 
 
 COMMENT ON COLUMN "public"."calculation_metadata"."checked" IS 'Boolean flag indicating if the calculation has been checked/reviewed';
-
-
-
-COMMENT ON COLUMN "public"."calculation_metadata"."input_schema_old" IS 'Backup of original input_schema format';
-
-
-
-COMMENT ON COLUMN "public"."calculation_metadata"."output_schema_old" IS 'Backup of original output_schema format';
 
 
 
