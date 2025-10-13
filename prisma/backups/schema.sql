@@ -1413,8 +1413,6 @@ CREATE TABLE IF NOT EXISTS "public"."calculation_metadata" (
     "latex" "text" DEFAULT ''::"text",
     "diagram_path" "text",
     "tags" "text"[] DEFAULT '{}'::"text"[],
-    "input_schema" "jsonb" NOT NULL,
-    "output_schema" "jsonb" NOT NULL,
     "references" "text"[] DEFAULT '{}'::"text"[],
     "related_calcs" "text"[],
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
@@ -1424,8 +1422,9 @@ CREATE TABLE IF NOT EXISTS "public"."calculation_metadata" (
     "subcategory" "text",
     "guidance" "text" DEFAULT '''{}''::text[]'::"text",
     "checked" boolean DEFAULT false NOT NULL,
-    "input_schema_new" "jsonb",
-    "output_schema_new" "jsonb"
+    "input_schema" "jsonb",
+    "output_schema" "jsonb",
+    "is_live" boolean DEFAULT true NOT NULL
 );
 
 
@@ -1436,23 +1435,19 @@ COMMENT ON TABLE "public"."calculation_metadata" IS 'Calculation metadata table 
 
 
 
-COMMENT ON COLUMN "public"."calculation_metadata"."input_schema" IS 'Input parameter definitions with symbol field for mathematical notation';
-
-
-
-COMMENT ON COLUMN "public"."calculation_metadata"."output_schema" IS 'Output parameter definitions with symbol field for mathematical notation';
-
-
-
 COMMENT ON COLUMN "public"."calculation_metadata"."checked" IS 'Boolean flag indicating if the calculation has been checked/reviewed';
 
 
 
-COMMENT ON COLUMN "public"."calculation_metadata"."input_schema_new" IS 'New input_schema format with enhanced unit handling (dimension, metric, imperial)';
+COMMENT ON COLUMN "public"."calculation_metadata"."input_schema" IS 'Input parameter definitions with enhanced unit handling';
 
 
 
-COMMENT ON COLUMN "public"."calculation_metadata"."output_schema_new" IS 'New output_schema format with enhanced unit handling (dimension, metric, imperial)';
+COMMENT ON COLUMN "public"."calculation_metadata"."output_schema" IS 'Output parameter definitions with enhanced unit handling';
+
+
+
+COMMENT ON COLUMN "public"."calculation_metadata"."is_live" IS 'Controls whether calculation is available to all users. When false, calculation is hidden from non-admin users';
 
 
 
@@ -1739,11 +1734,15 @@ CREATE INDEX "idx_calculation_metadata_created_at" ON "public"."calculation_meta
 
 
 
-CREATE INDEX "idx_calculation_metadata_input_schema_gin" ON "public"."calculation_metadata" USING "gin" ("input_schema");
+CREATE INDEX "idx_calculation_metadata_input_schema" ON "public"."calculation_metadata" USING "gin" ("input_schema");
 
 
 
-CREATE INDEX "idx_calculation_metadata_output_schema_gin" ON "public"."calculation_metadata" USING "gin" ("output_schema");
+CREATE INDEX "idx_calculation_metadata_is_live" ON "public"."calculation_metadata" USING "btree" ("is_live");
+
+
+
+CREATE INDEX "idx_calculation_metadata_output_schema" ON "public"."calculation_metadata" USING "gin" ("output_schema");
 
 
 
