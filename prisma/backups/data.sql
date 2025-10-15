@@ -4,7 +4,7 @@ SET session_replication_role = replica;
 -- PostgreSQL database dump
 --
 
--- \restrict inEoFMVltuFcrFPzygG1iPq85TxVRhDu04GPV0awC4IHGsLbBICZs38a7FBXOwy
+-- \restrict gQhklMqfIQX0kbXp4GUdD3eehE9fmCla5Y5R2FqK6z4t5Z3TeGbY0nbOvoqWNWu
 
 -- Dumped from database version 15.8
 -- Dumped by pg_dump version 17.6
@@ -1206,6 +1206,18 @@ COPY "auth"."audit_log_entries" ("instance_id", "id", "payload", "created_at", "
 00000000-0000-0000-0000-000000000000	3f03a631-9135-49ad-bbc3-2a793e6378de	{"action":"token_revoked","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-13 12:02:57.082353+00	
 00000000-0000-0000-0000-000000000000	b65dd423-15ca-479a-a6ab-de7d9ef2c43c	{"action":"token_refreshed","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-13 13:01:19.280888+00	
 00000000-0000-0000-0000-000000000000	042e1394-041c-42bb-83ab-b5b16d554b29	{"action":"token_revoked","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-13 13:01:19.320855+00	
+00000000-0000-0000-0000-000000000000	9ca45ba4-03a8-4f30-ac7f-f5a389ca9ecf	{"action":"token_refreshed","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-14 11:03:13.901832+00	
+00000000-0000-0000-0000-000000000000	372d64a0-ff2d-4362-995e-7cb9a0b5ef45	{"action":"token_revoked","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-14 11:03:13.939505+00	
+00000000-0000-0000-0000-000000000000	7b8dfe12-88d7-4ca5-a60e-e3051e3b712f	{"action":"token_refreshed","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-14 13:58:09.822313+00	
+00000000-0000-0000-0000-000000000000	5ab83398-4bc3-4846-ba97-9d49cb521c25	{"action":"token_revoked","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-14 13:58:09.881736+00	
+00000000-0000-0000-0000-000000000000	a5db4b3a-c3dd-434b-81f2-ac1b0b55fc6a	{"action":"token_refreshed","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-14 14:56:11.201099+00	
+00000000-0000-0000-0000-000000000000	9de9cfb5-c8b2-4ca1-9186-b9eb09f0275e	{"action":"token_revoked","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-14 14:56:11.238743+00	
+00000000-0000-0000-0000-000000000000	32b92793-665d-4de8-9a0c-e7966c8afc93	{"action":"token_refreshed","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-14 18:06:54.722988+00	
+00000000-0000-0000-0000-000000000000	9d67c5aa-225d-4475-94ff-55d4be0b48fe	{"action":"token_revoked","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-14 18:06:54.776181+00	
+00000000-0000-0000-0000-000000000000	c4babdf5-8b67-4289-bf9f-93b0f03f119e	{"action":"token_refreshed","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-14 19:12:14.512064+00	
+00000000-0000-0000-0000-000000000000	f7344513-9f60-400f-90c0-0414cbe68a4a	{"action":"token_revoked","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-14 19:12:14.56115+00	
+00000000-0000-0000-0000-000000000000	88644f8e-342e-4fef-af28-cffe7e8c75d3	{"action":"token_refreshed","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-14 20:17:10.884775+00	
+00000000-0000-0000-0000-000000000000	8e520d3e-17d6-475e-94c4-7447728f72cb	{"action":"token_revoked","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-14 20:17:10.95837+00	
 \.
 
 
@@ -1223,7 +1235,7 @@ COPY "auth"."flow_state" ("id", "user_id", "auth_code", "code_challenge_method",
 
 COPY "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous", "company", "profession", "country", "city") FROM stdin;
 00000000-0000-0000-0000-000000000000	b8c2ca65-ad45-4310-af57-49368e91d3bb	authenticated	authenticated	david_naylor@icloud.com	$2a$10$tWaW93e0SImQQFDGOPw6E.80EvSYa5nbV8BJ.MlFfCiAFZ3HzhU5W	2025-04-09 07:35:33.594117+00	\N		\N		\N			\N	2025-04-09 07:35:33.599907+00	{"provider": "email", "providers": ["email"]}	{"sub": "b8c2ca65-ad45-4310-af57-49368e91d3bb", "email": "david_naylor@icloud.com", "full_name": "David N", "email_verified": true, "phone_verified": false}	f	2025-04-09 07:35:33.536089+00	2025-04-09 07:35:33.628671+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
-00000000-0000-0000-0000-000000000000	89a501d9-e11e-4215-8c0c-1b071badf9ec	authenticated	authenticated	djnaylor97@gmail.com	$2a$06$rMH7VZJ5cNmVdVxFuxsw9OU2UIe.BdVNDFjoWJVt0.Qr9jPrI7fqi	2025-04-09 05:50:08.723654+00	\N		\N		\N			\N	2025-10-12 09:12:45.679122+00	{"provider": "email", "providers": ["email"]}	{"city": "London", "role": "admin", "company": "WSP", "country": "", "full_name": "David Naylor", "last_name": "Naylor", "first_name": "David", "profession": "Mech", "avatar_emoji": "👨‍💻", "email_verified": true}	t	2025-04-09 05:50:08.66869+00	2025-10-13 13:01:19.374693+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
+00000000-0000-0000-0000-000000000000	89a501d9-e11e-4215-8c0c-1b071badf9ec	authenticated	authenticated	djnaylor97@gmail.com	$2a$06$rMH7VZJ5cNmVdVxFuxsw9OU2UIe.BdVNDFjoWJVt0.Qr9jPrI7fqi	2025-04-09 05:50:08.723654+00	\N		\N		\N			\N	2025-10-12 09:12:45.679122+00	{"provider": "email", "providers": ["email"]}	{"city": "London", "role": "admin", "company": "WSP", "country": "", "full_name": "David Naylor", "last_name": "Naylor", "first_name": "David", "profession": "Mech", "avatar_emoji": "👨‍💻", "email_verified": true}	t	2025-04-09 05:50:08.66869+00	2025-10-14 20:17:11.024501+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
 00000000-0000-0000-0000-000000000000	bc7b3d31-990b-4f1e-975d-f2bf9605f160	authenticated	authenticated	john@gmail.com	$2a$10$hPEmhja05wbjeDHDbMCLMeYxyiwTnSkD0P1HfpBaqTzJnNzJbt.h.	2025-04-10 05:23:48.698628+00	\N		\N		\N			\N	2025-10-12 09:07:12.654581+00	{"provider": "email", "providers": ["email"]}	{"sub": "bc7b3d31-990b-4f1e-975d-f2bf9605f160", "city": "Cambridge", "email": "john@gmail.com", "company": "Mott MacDonald", "country": "United Kingdom", "full_name": "John Naylor", "last_name": "Naylor", "first_name": "John", "profession": "Electrical Engineer", "avatar_emoji": "🐸", "email_verified": true, "phone_verified": false}	f	2025-04-10 05:23:48.649145+00	2025-10-12 09:07:12.677018+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
 \.
 
@@ -1248,11 +1260,19 @@ COPY "auth"."instances" ("id", "uuid", "raw_base_config", "created_at", "updated
 
 
 --
+-- Data for Name: oauth_clients; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+COPY "auth"."oauth_clients" ("id", "client_secret_hash", "registration_type", "redirect_uris", "grant_types", "client_name", "client_uri", "logo_uri", "created_at", "updated_at", "deleted_at", "client_type") FROM stdin;
+\.
+
+
+--
 -- Data for Name: sessions; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-COPY "auth"."sessions" ("id", "user_id", "created_at", "updated_at", "factor_id", "aal", "not_after", "refreshed_at", "user_agent", "ip", "tag") FROM stdin;
-6e711df7-4866-4712-8424-9d21c01c710b	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-10-12 09:12:45.681563+00	2025-10-13 13:01:19.390964+00	\N	aal1	\N	2025-10-13 13:01:19.390887	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15	202.44.213.32	\N
+COPY "auth"."sessions" ("id", "user_id", "created_at", "updated_at", "factor_id", "aal", "not_after", "refreshed_at", "user_agent", "ip", "tag", "oauth_client_id") FROM stdin;
+6e711df7-4866-4712-8424-9d21c01c710b	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-10-12 09:12:45.681563+00	2025-10-14 20:17:11.046352+00	\N	aal1	\N	2025-10-14 20:17:11.046262	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15	49.48.33.127	\N	\N
 \.
 
 
@@ -1282,10 +1302,18 @@ COPY "auth"."mfa_challenges" ("id", "factor_id", "created_at", "verified_at", "i
 
 
 --
--- Data for Name: oauth_clients; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+-- Data for Name: oauth_authorizations; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-COPY "auth"."oauth_clients" ("id", "client_id", "client_secret_hash", "registration_type", "redirect_uris", "grant_types", "client_name", "client_uri", "logo_uri", "created_at", "updated_at", "deleted_at") FROM stdin;
+COPY "auth"."oauth_authorizations" ("id", "authorization_id", "client_id", "user_id", "redirect_uri", "scope", "state", "resource", "code_challenge", "code_challenge_method", "response_type", "status", "authorization_code", "created_at", "expires_at", "approved_at") FROM stdin;
+\.
+
+
+--
+-- Data for Name: oauth_consents; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+COPY "auth"."oauth_consents" ("id", "user_id", "client_id", "scopes", "granted_at", "revoked_at") FROM stdin;
 \.
 
 
@@ -1305,7 +1333,13 @@ COPY "auth"."refresh_tokens" ("instance_id", "id", "token", "user_id", "revoked"
 00000000-0000-0000-0000-000000000000	587	iqaj3t46i5vo	89a501d9-e11e-4215-8c0c-1b071badf9ec	t	2025-10-12 09:12:45.697525+00	2025-10-13 02:17:03.586947+00	\N	6e711df7-4866-4712-8424-9d21c01c710b
 00000000-0000-0000-0000-000000000000	588	dshmn6pplee2	89a501d9-e11e-4215-8c0c-1b071badf9ec	t	2025-10-13 02:17:03.626205+00	2025-10-13 12:02:57.086516+00	iqaj3t46i5vo	6e711df7-4866-4712-8424-9d21c01c710b
 00000000-0000-0000-0000-000000000000	589	ohhwxw6woj5p	89a501d9-e11e-4215-8c0c-1b071badf9ec	t	2025-10-13 12:02:57.13299+00	2025-10-13 13:01:19.325076+00	dshmn6pplee2	6e711df7-4866-4712-8424-9d21c01c710b
-00000000-0000-0000-0000-000000000000	590	rz7kqcvhxbso	89a501d9-e11e-4215-8c0c-1b071badf9ec	f	2025-10-13 13:01:19.358124+00	2025-10-13 13:01:19.358124+00	ohhwxw6woj5p	6e711df7-4866-4712-8424-9d21c01c710b
+00000000-0000-0000-0000-000000000000	590	rz7kqcvhxbso	89a501d9-e11e-4215-8c0c-1b071badf9ec	t	2025-10-13 13:01:19.358124+00	2025-10-14 11:03:13.949822+00	ohhwxw6woj5p	6e711df7-4866-4712-8424-9d21c01c710b
+00000000-0000-0000-0000-000000000000	591	zm7jvarrsbzj	89a501d9-e11e-4215-8c0c-1b071badf9ec	t	2025-10-14 11:03:13.967667+00	2025-10-14 13:58:09.899087+00	rz7kqcvhxbso	6e711df7-4866-4712-8424-9d21c01c710b
+00000000-0000-0000-0000-000000000000	592	xouwfdx55c6e	89a501d9-e11e-4215-8c0c-1b071badf9ec	t	2025-10-14 13:58:09.942423+00	2025-10-14 14:56:11.239525+00	zm7jvarrsbzj	6e711df7-4866-4712-8424-9d21c01c710b
+00000000-0000-0000-0000-000000000000	593	gq7tezzqgo3y	89a501d9-e11e-4215-8c0c-1b071badf9ec	t	2025-10-14 14:56:11.287336+00	2025-10-14 18:06:54.782289+00	xouwfdx55c6e	6e711df7-4866-4712-8424-9d21c01c710b
+00000000-0000-0000-0000-000000000000	594	hqqc5r4mazfs	89a501d9-e11e-4215-8c0c-1b071badf9ec	t	2025-10-14 18:06:54.826122+00	2025-10-14 19:12:14.567378+00	gq7tezzqgo3y	6e711df7-4866-4712-8424-9d21c01c710b
+00000000-0000-0000-0000-000000000000	595	56i6unxrkygy	89a501d9-e11e-4215-8c0c-1b071badf9ec	t	2025-10-14 19:12:14.594015+00	2025-10-14 20:17:10.959041+00	hqqc5r4mazfs	6e711df7-4866-4712-8424-9d21c01c710b
+00000000-0000-0000-0000-000000000000	596	4moabd2t2mnx	89a501d9-e11e-4215-8c0c-1b071badf9ec	f	2025-10-14 20:17:11.008708+00	2025-10-14 20:17:11.008708+00	56i6unxrkygy	6e711df7-4866-4712-8424-9d21c01c710b
 \.
 
 
@@ -1645,9 +1679,9 @@ cc2ba8ce-7f38-47b3-801c-fe7fb5344c0f	bc7b3d31-990b-4f1e-975d-f2bf9605f160	air_ve
 
 COPY "public"."user_calculation_limits" ("id", "user_id", "month_year", "calculation_count", "monthly_limit", "created_at", "updated_at") FROM stdin;
 40cd21d3-0352-4653-a4f7-a56f5bb48153	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-10	45	100	2025-10-01 00:39:54.947631+00	2025-10-11 10:38:33.314724+00
-7d8eb94f-2c3e-4743-b422-8233b21d22e1	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-10	1	100	2025-10-12 03:56:32.34885+00	2025-10-12 03:56:33.867281+00
 2249fcb9-3c20-4588-8dba-106a65e3db8d	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-08	7	100	2025-08-12 05:24:10.625787+00	2025-08-26 16:05:42.125262+00
 3d6bb90e-c5b1-43cc-b36c-6a84f40368fe	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-09	36	100	2025-09-08 12:21:37.291326+00	2025-09-29 12:57:12.04321+00
+7d8eb94f-2c3e-4743-b422-8233b21d22e1	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-10	8	100	2025-10-12 03:56:32.34885+00	2025-10-14 15:03:18.126337+00
 37c0fc2a-8f62-4d5c-9f1e-db1357d0dbf3	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-08	31	100	2025-08-12 04:48:42.90199+00	2025-08-30 04:22:02.363237+00
 \.
 
@@ -1704,13 +1738,13 @@ COPY "storage"."s3_multipart_uploads_parts" ("id", "upload_id", "size", "part_nu
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: supabase_auth_admin
 --
 
-SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 590, true);
+SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 596, true);
 
 
 --
 -- PostgreSQL database dump complete
 --
 
--- \unrestrict inEoFMVltuFcrFPzygG1iPq85TxVRhDu04GPV0awC4IHGsLbBICZs38a7FBXOwy
+-- \unrestrict gQhklMqfIQX0kbXp4GUdD3eehE9fmCla5Y5R2FqK6z4t5Z3TeGbY0nbOvoqWNWu
 
 RESET ALL;
