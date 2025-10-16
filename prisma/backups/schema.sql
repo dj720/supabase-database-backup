@@ -1380,13 +1380,188 @@ CREATE OR REPLACE FUNCTION "public"."update_updated_at_column"() RETURNS "trigge
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
-    NEW.updated_at = now();
+    NEW.updated_at = NOW();
     RETURN NEW;
 END;
 $$;
 
 
 ALTER FUNCTION "public"."update_updated_at_column"() OWNER TO "postgres";
+
+
+CREATE TABLE IF NOT EXISTS "public"."calc_duct_dimensions" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "type" "text" NOT NULL,
+    "diameter_mm" numeric,
+    "width_mm" numeric,
+    "height_mm" numeric,
+    "created_at" timestamp with time zone DEFAULT "now"(),
+    "updated_at" timestamp with time zone DEFAULT "now"()
+);
+
+
+ALTER TABLE "public"."calc_duct_dimensions" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."calc_duct_dimensions" IS 'Standard duct dimensions for common sizes';
+
+
+
+COMMENT ON COLUMN "public"."calc_duct_dimensions"."type" IS 'Duct type: round or rectangular';
+
+
+
+COMMENT ON COLUMN "public"."calc_duct_dimensions"."diameter_mm" IS 'Diameter for round ducts (mm)';
+
+
+
+COMMENT ON COLUMN "public"."calc_duct_dimensions"."width_mm" IS 'Width for rectangular ducts (mm)';
+
+
+
+COMMENT ON COLUMN "public"."calc_duct_dimensions"."height_mm" IS 'Height for rectangular ducts (mm)';
+
+
+
+CREATE TABLE IF NOT EXISTS "public"."calc_pipe_dimensions" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "material" "text" NOT NULL,
+    "specification" "text",
+    "equivalent_roughness" numeric,
+    "nominal_diameter" numeric NOT NULL,
+    "internal_diameter" numeric NOT NULL,
+    "density" numeric,
+    "specific_heat_capacity" numeric,
+    "thermal_conductivity" numeric,
+    "created_at" timestamp with time zone DEFAULT "now"(),
+    "updated_at" timestamp with time zone DEFAULT "now"()
+);
+
+
+ALTER TABLE "public"."calc_pipe_dimensions" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."calc_pipe_dimensions" IS 'Pipe dimensions and properties from standard pipe tables';
+
+
+
+COMMENT ON COLUMN "public"."calc_pipe_dimensions"."material" IS 'Pipe material type';
+
+
+
+COMMENT ON COLUMN "public"."calc_pipe_dimensions"."specification" IS 'Relevant standard (e.g., BS EN 10255)';
+
+
+
+COMMENT ON COLUMN "public"."calc_pipe_dimensions"."equivalent_roughness" IS 'Equivalent roughness (mm)';
+
+
+
+COMMENT ON COLUMN "public"."calc_pipe_dimensions"."nominal_diameter" IS 'Nominal diameter (mm)';
+
+
+
+COMMENT ON COLUMN "public"."calc_pipe_dimensions"."internal_diameter" IS 'Internal diameter (mm)';
+
+
+
+COMMENT ON COLUMN "public"."calc_pipe_dimensions"."density" IS 'Material density (kg/m³)';
+
+
+
+COMMENT ON COLUMN "public"."calc_pipe_dimensions"."specific_heat_capacity" IS 'Specific heat capacity (J/kg·K)';
+
+
+
+COMMENT ON COLUMN "public"."calc_pipe_dimensions"."thermal_conductivity" IS 'Thermal conductivity (W/m·K)';
+
+
+
+CREATE TABLE IF NOT EXISTS "public"."calc_reference_arrays" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "array_name" "text" NOT NULL,
+    "values" numeric[],
+    "unit" "text",
+    "description" "text",
+    "category" "text" NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"(),
+    "updated_at" timestamp with time zone DEFAULT "now"()
+);
+
+
+ALTER TABLE "public"."calc_reference_arrays" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."calc_reference_arrays" IS 'Stores arrays of numeric values used in calculations';
+
+
+
+COMMENT ON COLUMN "public"."calc_reference_arrays"."array_name" IS 'Unique identifier for the array (e.g., OCTAVE_BAND_CENTERS)';
+
+
+
+COMMENT ON COLUMN "public"."calc_reference_arrays"."values" IS 'Array of numeric values';
+
+
+
+CREATE TABLE IF NOT EXISTS "public"."calc_reference_constants" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "constant_name" "text" NOT NULL,
+    "value" numeric NOT NULL,
+    "unit" "text",
+    "description" "text",
+    "category" "text" NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"(),
+    "updated_at" timestamp with time zone DEFAULT "now"()
+);
+
+
+ALTER TABLE "public"."calc_reference_constants" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."calc_reference_constants" IS 'Stores simple numeric constants used in calculations';
+
+
+
+COMMENT ON COLUMN "public"."calc_reference_constants"."constant_name" IS 'Unique identifier for the constant (e.g., REFERENCE_SOUND_POWER_W)';
+
+
+
+COMMENT ON COLUMN "public"."calc_reference_constants"."category" IS 'Category: acoustics, thermal, stack_sizing, etc.';
+
+
+
+CREATE TABLE IF NOT EXISTS "public"."calc_reference_lookup" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "lookup_table" "text" NOT NULL,
+    "key" "text" NOT NULL,
+    "value" numeric NOT NULL,
+    "unit" "text",
+    "description" "text",
+    "category" "text" NOT NULL,
+    "metadata" "jsonb",
+    "created_at" timestamp with time zone DEFAULT "now"(),
+    "updated_at" timestamp with time zone DEFAULT "now"()
+);
+
+
+ALTER TABLE "public"."calc_reference_lookup" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."calc_reference_lookup" IS 'Stores lookup tables with key-value pairs for calculations';
+
+
+
+COMMENT ON COLUMN "public"."calc_reference_lookup"."lookup_table" IS 'Name of the lookup table (e.g., material_thermal_conductivity)';
+
+
+
+COMMENT ON COLUMN "public"."calc_reference_lookup"."key" IS 'Lookup key (e.g., material name)';
+
+
+
+COMMENT ON COLUMN "public"."calc_reference_lookup"."metadata" IS 'Additional metadata as JSON';
+
 
 
 CREATE TABLE IF NOT EXISTS "public"."calculation_flows" (
@@ -1443,7 +1618,7 @@ COMMENT ON COLUMN "public"."calculation_metadata"."input_schema" IS 'Input param
 
 
 
-COMMENT ON COLUMN "public"."calculation_metadata"."output_schema" IS 'Output parameter definitions with enhanced unit handling';
+COMMENT ON COLUMN "public"."calculation_metadata"."output_schema" IS 'JSON schema defining the output parameters. All values must be floats for standard compliance.';
 
 
 
@@ -1624,6 +1799,51 @@ COMMENT ON COLUMN "public"."user_calculation_favorites"."calculation_id" IS 'Ref
 
 
 
+ALTER TABLE ONLY "public"."calc_duct_dimensions"
+    ADD CONSTRAINT "calc_duct_dimensions_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."calc_pipe_dimensions"
+    ADD CONSTRAINT "calc_pipe_dimensions_material_nominal_diameter_key" UNIQUE ("material", "nominal_diameter");
+
+
+
+ALTER TABLE ONLY "public"."calc_pipe_dimensions"
+    ADD CONSTRAINT "calc_pipe_dimensions_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."calc_reference_arrays"
+    ADD CONSTRAINT "calc_reference_arrays_array_name_key" UNIQUE ("array_name");
+
+
+
+ALTER TABLE ONLY "public"."calc_reference_arrays"
+    ADD CONSTRAINT "calc_reference_arrays_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."calc_reference_constants"
+    ADD CONSTRAINT "calc_reference_constants_constant_name_key" UNIQUE ("constant_name");
+
+
+
+ALTER TABLE ONLY "public"."calc_reference_constants"
+    ADD CONSTRAINT "calc_reference_constants_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."calc_reference_lookup"
+    ADD CONSTRAINT "calc_reference_lookup_lookup_table_key_key" UNIQUE ("lookup_table", "key");
+
+
+
+ALTER TABLE ONLY "public"."calc_reference_lookup"
+    ADD CONSTRAINT "calc_reference_lookup_pkey" PRIMARY KEY ("id");
+
+
+
 ALTER TABLE ONLY "public"."calculation_flows"
     ADD CONSTRAINT "calculation_flows_pkey" PRIMARY KEY ("id");
 
@@ -1691,6 +1911,58 @@ ALTER TABLE ONLY "public"."user_calculation_limits"
 
 ALTER TABLE ONLY "public"."user_calculation_limits"
     ADD CONSTRAINT "user_calculation_limits_user_id_month_year_key" UNIQUE ("user_id", "month_year");
+
+
+
+CREATE INDEX "idx_calc_duct_dimensions_diameter" ON "public"."calc_duct_dimensions" USING "btree" ("diameter_mm");
+
+
+
+CREATE INDEX "idx_calc_duct_dimensions_type" ON "public"."calc_duct_dimensions" USING "btree" ("type");
+
+
+
+CREATE INDEX "idx_calc_duct_dimensions_width" ON "public"."calc_duct_dimensions" USING "btree" ("width_mm");
+
+
+
+CREATE INDEX "idx_calc_pipe_dimensions_material" ON "public"."calc_pipe_dimensions" USING "btree" ("material");
+
+
+
+CREATE INDEX "idx_calc_pipe_dimensions_material_nominal" ON "public"."calc_pipe_dimensions" USING "btree" ("material", "nominal_diameter");
+
+
+
+CREATE INDEX "idx_calc_pipe_dimensions_nominal" ON "public"."calc_pipe_dimensions" USING "btree" ("nominal_diameter");
+
+
+
+CREATE INDEX "idx_calc_reference_arrays_category" ON "public"."calc_reference_arrays" USING "btree" ("category");
+
+
+
+CREATE INDEX "idx_calc_reference_arrays_name" ON "public"."calc_reference_arrays" USING "btree" ("array_name");
+
+
+
+CREATE INDEX "idx_calc_reference_constants_category" ON "public"."calc_reference_constants" USING "btree" ("category");
+
+
+
+CREATE INDEX "idx_calc_reference_constants_name" ON "public"."calc_reference_constants" USING "btree" ("constant_name");
+
+
+
+CREATE INDEX "idx_calc_reference_lookup_category" ON "public"."calc_reference_lookup" USING "btree" ("category");
+
+
+
+CREATE INDEX "idx_calc_reference_lookup_key" ON "public"."calc_reference_lookup" USING "btree" ("lookup_table", "key");
+
+
+
+CREATE INDEX "idx_calc_reference_lookup_table" ON "public"."calc_reference_lookup" USING "btree" ("lookup_table");
 
 
 
@@ -1874,6 +2146,26 @@ CREATE OR REPLACE TRIGGER "set_timestamp" BEFORE UPDATE ON "public"."projects" F
 
 
 
+CREATE OR REPLACE TRIGGER "update_calc_duct_dimensions_updated_at" BEFORE UPDATE ON "public"."calc_duct_dimensions" FOR EACH ROW EXECUTE FUNCTION "public"."update_updated_at_column"();
+
+
+
+CREATE OR REPLACE TRIGGER "update_calc_pipe_dimensions_updated_at" BEFORE UPDATE ON "public"."calc_pipe_dimensions" FOR EACH ROW EXECUTE FUNCTION "public"."update_updated_at_column"();
+
+
+
+CREATE OR REPLACE TRIGGER "update_calc_reference_arrays_updated_at" BEFORE UPDATE ON "public"."calc_reference_arrays" FOR EACH ROW EXECUTE FUNCTION "public"."update_updated_at_column"();
+
+
+
+CREATE OR REPLACE TRIGGER "update_calc_reference_constants_updated_at" BEFORE UPDATE ON "public"."calc_reference_constants" FOR EACH ROW EXECUTE FUNCTION "public"."update_updated_at_column"();
+
+
+
+CREATE OR REPLACE TRIGGER "update_calc_reference_lookup_updated_at" BEFORE UPDATE ON "public"."calc_reference_lookup" FOR EACH ROW EXECUTE FUNCTION "public"."update_updated_at_column"();
+
+
+
 CREATE OR REPLACE TRIGGER "update_calculation_flows_updated_at" BEFORE UPDATE ON "public"."calculation_flows" FOR EACH ROW EXECUTE FUNCTION "public"."update_updated_at_column"();
 
 
@@ -2015,6 +2307,46 @@ CREATE POLICY "Admins can view all folders" ON "public"."folders" FOR SELECT USI
 
 
 CREATE POLICY "Admins can view all projects" ON "public"."projects" FOR SELECT USING ("public"."is_admin"("auth"."uid"()));
+
+
+
+CREATE POLICY "Allow anonymous users to read arrays" ON "public"."calc_reference_arrays" FOR SELECT TO "anon" USING (true);
+
+
+
+CREATE POLICY "Allow anonymous users to read constants" ON "public"."calc_reference_constants" FOR SELECT TO "anon" USING (true);
+
+
+
+CREATE POLICY "Allow anonymous users to read duct dimensions" ON "public"."calc_duct_dimensions" FOR SELECT TO "anon" USING (true);
+
+
+
+CREATE POLICY "Allow anonymous users to read lookup tables" ON "public"."calc_reference_lookup" FOR SELECT TO "anon" USING (true);
+
+
+
+CREATE POLICY "Allow anonymous users to read pipe dimensions" ON "public"."calc_pipe_dimensions" FOR SELECT TO "anon" USING (true);
+
+
+
+CREATE POLICY "Allow authenticated users to read arrays" ON "public"."calc_reference_arrays" FOR SELECT TO "authenticated" USING (true);
+
+
+
+CREATE POLICY "Allow authenticated users to read constants" ON "public"."calc_reference_constants" FOR SELECT TO "authenticated" USING (true);
+
+
+
+CREATE POLICY "Allow authenticated users to read duct dimensions" ON "public"."calc_duct_dimensions" FOR SELECT TO "authenticated" USING (true);
+
+
+
+CREATE POLICY "Allow authenticated users to read lookup tables" ON "public"."calc_reference_lookup" FOR SELECT TO "authenticated" USING (true);
+
+
+
+CREATE POLICY "Allow authenticated users to read pipe dimensions" ON "public"."calc_pipe_dimensions" FOR SELECT TO "authenticated" USING (true);
 
 
 
@@ -2218,6 +2550,21 @@ CREATE POLICY "Users can view their own folder templates" ON "public"."folder_te
 
 CREATE POLICY "Users can view their own projects" ON "public"."projects" FOR SELECT USING (("auth"."uid"() = "user_id"));
 
+
+
+ALTER TABLE "public"."calc_duct_dimensions" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."calc_pipe_dimensions" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."calc_reference_arrays" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."calc_reference_constants" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."calc_reference_lookup" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."calculation_flows" ENABLE ROW LEVEL SECURITY;
@@ -2607,6 +2954,36 @@ GRANT ALL ON FUNCTION "public"."update_updated_at_column"() TO "service_role";
 
 
 
+
+
+
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calc_duct_dimensions" TO "anon";
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calc_duct_dimensions" TO "authenticated";
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calc_duct_dimensions" TO "service_role";
+
+
+
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calc_pipe_dimensions" TO "anon";
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calc_pipe_dimensions" TO "authenticated";
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calc_pipe_dimensions" TO "service_role";
+
+
+
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calc_reference_arrays" TO "anon";
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calc_reference_arrays" TO "authenticated";
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calc_reference_arrays" TO "service_role";
+
+
+
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calc_reference_constants" TO "anon";
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calc_reference_constants" TO "authenticated";
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calc_reference_constants" TO "service_role";
+
+
+
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calc_reference_lookup" TO "anon";
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calc_reference_lookup" TO "authenticated";
+GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "public"."calc_reference_lookup" TO "service_role";
 
 
 
