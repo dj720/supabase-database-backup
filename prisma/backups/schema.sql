@@ -1389,6 +1389,80 @@ $$;
 ALTER FUNCTION "public"."update_updated_at_column"() OWNER TO "postgres";
 
 
+CREATE OR REPLACE FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "schema_type" "text") RETURNS "void"
+    LANGUAGE "plpgsql"
+    AS $$
+DECLARE
+  param_name TEXT;
+  param_data JSONB;
+  units_data JSONB;
+  metric_config JSONB;
+  imperial_config JSONB;
+BEGIN
+  FOR param_name IN SELECT jsonb_object_keys(schema)
+  LOOP
+    param_data := schema->param_name;
+    units_data := param_data->'units';
+    
+    -- Check if units exists
+    IF units_data IS NOT NULL THEN
+      -- Validate that metric and imperial are objects
+      IF jsonb_typeof(units_data->'metric') != 'object' OR jsonb_typeof(units_data->'imperial') != 'object' THEN
+        RAISE EXCEPTION 'units in % schema for parameter % must have metric and imperial as objects', schema_type, param_name;
+      END IF;
+      
+      metric_config := units_data->'metric';
+      imperial_config := units_data->'imperial';
+      
+      -- Validate metric config has required fields
+      IF NOT (metric_config ? 'unit') THEN
+        RAISE EXCEPTION 'metric config in % schema for parameter % must have unit field', schema_type, param_name;
+      END IF;
+      
+      -- Validate imperial config has required fields
+      IF NOT (imperial_config ? 'unit') THEN
+        RAISE EXCEPTION 'imperial config in % schema for parameter % must have unit field', schema_type, param_name;
+      END IF;
+      
+      -- Validate unit fields are strings
+      IF jsonb_typeof(metric_config->'unit') != 'string' THEN
+        RAISE EXCEPTION 'metric unit in % schema for parameter % must be a string', schema_type, param_name;
+      END IF;
+      
+      IF jsonb_typeof(imperial_config->'unit') != 'string' THEN
+        RAISE EXCEPTION 'imperial unit in % schema for parameter % must be a string', schema_type, param_name;
+      END IF;
+    END IF;
+  END LOOP;
+END;
+$$;
+
+
+ALTER FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "schema_type" "text") OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."validate_units_structure"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+  -- Validate input_schema
+  IF NEW.input_schema IS NOT NULL THEN
+    PERFORM validate_schema_units_structure(NEW.input_schema, 'input');
+  END IF;
+  
+  -- Validate output_schema
+  IF NEW.output_schema IS NOT NULL THEN
+    PERFORM validate_schema_units_structure(NEW.output_schema, 'output');
+  END IF;
+  
+  RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION "public"."validate_units_structure"() OWNER TO "postgres";
+
+
 CREATE TABLE IF NOT EXISTS "public"."calc_duct_dimensions" (
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "type" "text" NOT NULL,
@@ -1614,11 +1688,11 @@ COMMENT ON COLUMN "public"."calculation_metadata"."checked" IS 'Boolean flag ind
 
 
 
-COMMENT ON COLUMN "public"."calculation_metadata"."input_schema" IS 'Input parameter definitions with enhanced unit handling';
+COMMENT ON COLUMN "public"."calculation_metadata"."input_schema" IS 'Input parameter schema. Legacy default_value and constraints fields have been removed - use units.metric/imperial sections instead';
 
 
 
-COMMENT ON COLUMN "public"."calculation_metadata"."output_schema" IS 'JSON schema defining the output parameters. All values must be floats for standard compliance.';
+COMMENT ON COLUMN "public"."calculation_metadata"."output_schema" IS 'Output parameter schema. Legacy default_value and constraints fields have been removed - use units.metric/imperial sections instead';
 
 
 
@@ -2191,6 +2265,10 @@ CREATE OR REPLACE TRIGGER "update_user_calculation_favorites_updated_at" BEFORE 
 
 
 CREATE OR REPLACE TRIGGER "update_user_calculation_limits_updated_at" BEFORE UPDATE ON "public"."user_calculation_limits" FOR EACH ROW EXECUTE FUNCTION "public"."update_updated_at_column"();
+
+
+
+CREATE OR REPLACE TRIGGER "validate_units_structure_trigger" BEFORE INSERT OR UPDATE OF "input_schema", "output_schema" ON "public"."calculation_metadata" FOR EACH ROW EXECUTE FUNCTION "public"."validate_units_structure"();
 
 
 
@@ -2939,6 +3017,18 @@ GRANT ALL ON FUNCTION "public"."update_project_constraints_updated_at"() TO "ser
 GRANT ALL ON FUNCTION "public"."update_updated_at_column"() TO "anon";
 GRANT ALL ON FUNCTION "public"."update_updated_at_column"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."update_updated_at_column"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "schema_type" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "schema_type" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "schema_type" "text") TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."validate_units_structure"() TO "anon";
+GRANT ALL ON FUNCTION "public"."validate_units_structure"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."validate_units_structure"() TO "service_role";
 
 
 
