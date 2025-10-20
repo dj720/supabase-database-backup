@@ -20,7 +20,7 @@ CREATE EXTENSION IF NOT EXISTS "pgsodium";
 
 
 
-COMMENT ON SCHEMA "public" IS 'standard public schema';
+COMMENT ON SCHEMA "public" IS 'All remaining search_path security warnings have been fixed for SECURITY DEFINER functions';
 
 
 
@@ -68,6 +68,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
 CREATE OR REPLACE FUNCTION "public"."can_user_run_calculation"("user_uuid" "uuid") RETURNS TABLE("can_run" boolean, "current_count" integer, "monthly_limit" integer, "remaining_calculations" integer)
     LANGUAGE "plpgsql" SECURITY DEFINER
+    SET "search_path" TO ''
     AS $$
 DECLARE
     limit_record user_calculation_limits;
@@ -90,6 +91,7 @@ ALTER FUNCTION "public"."can_user_run_calculation"("user_uuid" "uuid") OWNER TO 
 
 CREATE OR REPLACE FUNCTION "public"."convert_param_to_new_format"("old_param" "jsonb") RETURNS "jsonb"
     LANGUAGE "plpgsql"
+    SET "search_path" TO ''
     AS $$
 DECLARE
     new_param JSONB;
@@ -224,6 +226,7 @@ COMMENT ON FUNCTION "public"."convert_param_to_new_format"("old_param" "jsonb") 
 
 CREATE OR REPLACE FUNCTION "public"."convert_schema_to_new_format"("old_schema" "jsonb") RETURNS "jsonb"
     LANGUAGE "plpgsql"
+    SET "search_path" TO ''
     AS $$
 DECLARE
     new_schema JSONB;
@@ -350,6 +353,7 @@ COMMENT ON FUNCTION "public"."fix_units_dimension"("units_obj" "jsonb") IS 'Adds
 
 CREATE OR REPLACE FUNCTION "public"."get_admin_users"() RETURNS TABLE("id" "uuid", "email" "text", "full_name" "text", "is_admin" boolean, "created_at" timestamp with time zone)
     LANGUAGE "plpgsql" SECURITY DEFINER
+    SET "search_path" TO ''
     AS $$
 BEGIN
   RETURN QUERY
@@ -370,6 +374,7 @@ ALTER FUNCTION "public"."get_admin_users"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."get_dimension_from_unit"("unit" "text") RETURNS "text"
     LANGUAGE "plpgsql"
+    SET "search_path" TO ''
     AS $$
 BEGIN
     -- Comprehensive mapping of units to dimensions
@@ -620,6 +625,7 @@ COMMENT ON COLUMN "public"."user_calculation_limits"."monthly_limit" IS 'Maximum
 
 CREATE OR REPLACE FUNCTION "public"."get_or_create_user_calculation_limit"("user_uuid" "uuid") RETURNS "public"."user_calculation_limits"
     LANGUAGE "plpgsql" SECURITY DEFINER
+    SET "search_path" TO ''
     AS $$
 DECLARE
     current_month text;
@@ -648,19 +654,26 @@ $$;
 ALTER FUNCTION "public"."get_or_create_user_calculation_limit"("user_uuid" "uuid") OWNER TO "postgres";
 
 
-CREATE OR REPLACE FUNCTION "public"."get_super_admin_users"() RETURNS TABLE("id" "uuid", "email" "text", "full_name" "text", "is_super_admin" boolean, "created_at" timestamp with time zone)
+CREATE OR REPLACE FUNCTION "public"."get_super_admin_users"() RETURNS TABLE("id" "uuid", "email" "text", "full_name" "text", "created_at" timestamp with time zone, "last_sign_in_at" timestamp with time zone)
     LANGUAGE "plpgsql" SECURITY DEFINER
+    SET "search_path" TO ''
     AS $$
 BEGIN
+  -- Only allow super admins to get super admin users list
+  IF NOT is_super_admin() THEN
+    RAISE EXCEPTION 'Access denied. Super admin privileges required.';
+  END IF;
+  
   RETURN QUERY
   SELECT 
-    u.id,
-    u.email,
-    u.raw_user_meta_data->>'full_name' as full_name,
-    COALESCE(u.is_super_admin, false) as is_super_admin,
-    u.created_at
-  FROM auth.users u
-  WHERE COALESCE(u.is_super_admin, false) = true;
+    auth.users.id,
+    auth.users.email,
+    COALESCE(auth.users.raw_user_meta_data->>'full_name', auth.users.email) as full_name,
+    auth.users.created_at,
+    auth.users.last_sign_in_at
+  FROM auth.users
+  WHERE auth.users.is_super_admin = true
+  ORDER BY auth.users.created_at DESC;
 END;
 $$;
 
@@ -668,8 +681,13 @@ $$;
 ALTER FUNCTION "public"."get_super_admin_users"() OWNER TO "postgres";
 
 
+COMMENT ON FUNCTION "public"."get_super_admin_users"() IS 'Get list of all super admin users. Only super admins can use this function.';
+
+
+
 CREATE OR REPLACE FUNCTION "public"."get_user_calculation_usage_history"("user_uuid" "uuid") RETURNS TABLE("month_year" "text", "calculation_count" integer, "monthly_limit" integer, "usage_percentage" numeric)
     LANGUAGE "plpgsql" SECURITY DEFINER
+    SET "search_path" TO ''
     AS $$
 BEGIN
     RETURN QUERY
@@ -695,6 +713,7 @@ ALTER FUNCTION "public"."get_user_calculation_usage_history"("user_uuid" "uuid")
 
 CREATE OR REPLACE FUNCTION "public"."increment_user_calculation_count"("user_uuid" "uuid") RETURNS "public"."user_calculation_limits"
     LANGUAGE "plpgsql" SECURITY DEFINER
+    SET "search_path" TO ''
     AS $$
 DECLARE
     limit_record user_calculation_limits;
@@ -718,6 +737,7 @@ ALTER FUNCTION "public"."increment_user_calculation_count"("user_uuid" "uuid") O
 
 CREATE OR REPLACE FUNCTION "public"."is_admin"("user_id" "uuid") RETURNS boolean
     LANGUAGE "plpgsql" SECURITY DEFINER
+    SET "search_path" TO ''
     AS $$
 BEGIN
   -- Check if the user has admin role in their user_metadata
@@ -736,15 +756,17 @@ $$;
 ALTER FUNCTION "public"."is_admin"("user_id" "uuid") OWNER TO "postgres";
 
 
-CREATE OR REPLACE FUNCTION "public"."is_super_admin"("user_id" "uuid") RETURNS boolean
+CREATE OR REPLACE FUNCTION "public"."is_super_admin"("user_id" "uuid" DEFAULT "auth"."uid"()) RETURNS boolean
     LANGUAGE "plpgsql" SECURITY DEFINER
+    SET "search_path" TO ''
     AS $$
 BEGIN
-  -- Check if the user has super admin role in the dedicated column
-  RETURN (
-    SELECT COALESCE(is_super_admin, false)
+  -- Check if user exists and has super admin status in the is_super_admin column
+  RETURN EXISTS (
+    SELECT 1 
     FROM auth.users 
-    WHERE id = user_id
+    WHERE auth.users.id = user_id 
+    AND auth.users.is_super_admin = true
   );
 END;
 $$;
@@ -753,8 +775,13 @@ $$;
 ALTER FUNCTION "public"."is_super_admin"("user_id" "uuid") OWNER TO "postgres";
 
 
+COMMENT ON FUNCTION "public"."is_super_admin"("user_id" "uuid") IS 'Check if a user has super admin privileges. Uses is_super_admin column for security.';
+
+
+
 CREATE OR REPLACE FUNCTION "public"."normalize_unit"("unit_text" "text") RETURNS "text"
     LANGUAGE "plpgsql" IMMUTABLE
+    SET "search_path" TO ''
     AS $$
 BEGIN
     -- Return NULL/empty as-is
@@ -935,6 +962,7 @@ ALTER FUNCTION "public"."normalize_unit"("unit_text" "text") OWNER TO "postgres"
 
 CREATE OR REPLACE FUNCTION "public"."reset_user_calculation_count"("user_uuid" "uuid") RETURNS "public"."user_calculation_limits"
     LANGUAGE "plpgsql" SECURITY DEFINER
+    SET "search_path" TO ''
     AS $$
 DECLARE
     limit_record user_calculation_limits;
@@ -971,6 +999,7 @@ ALTER FUNCTION "public"."reset_user_calculation_count"("user_uuid" "uuid") OWNER
 
 CREATE OR REPLACE FUNCTION "public"."seed_ventilation_calculations"() RETURNS "void"
     LANGUAGE "plpgsql"
+    SET "search_path" TO ''
     AS $$
 DECLARE
     admin_user_id UUID;
@@ -1265,6 +1294,7 @@ ALTER FUNCTION "public"."seed_ventilation_calculations"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."set_admin_status"("user_id" "uuid", "admin_status" boolean) RETURNS "void"
     LANGUAGE "plpgsql" SECURITY DEFINER
+    SET "search_path" TO ''
     AS $$
 BEGIN
   -- Update the user's metadata to include admin status
@@ -1279,14 +1309,23 @@ $$;
 ALTER FUNCTION "public"."set_admin_status"("user_id" "uuid", "admin_status" boolean) OWNER TO "postgres";
 
 
-CREATE OR REPLACE FUNCTION "public"."set_super_admin_status"("user_id" "uuid", "super_admin_status" boolean) RETURNS "void"
+CREATE OR REPLACE FUNCTION "public"."set_super_admin_status"("user_id" "uuid", "super_admin_status" boolean) RETURNS boolean
     LANGUAGE "plpgsql" SECURITY DEFINER
+    SET "search_path" TO ''
     AS $$
 BEGIN
+  -- Only allow super admins to set super admin status
+  IF NOT is_super_admin() THEN
+    RAISE EXCEPTION 'Access denied. Super admin privileges required.';
+  END IF;
+  
   -- Update the user's is_super_admin column
   UPDATE auth.users 
   SET is_super_admin = super_admin_status
-  WHERE id = user_id;
+  WHERE auth.users.id = user_id;
+  
+  -- Return true if user was found and updated
+  RETURN FOUND;
 END;
 $$;
 
@@ -1294,8 +1333,13 @@ $$;
 ALTER FUNCTION "public"."set_super_admin_status"("user_id" "uuid", "super_admin_status" boolean) OWNER TO "postgres";
 
 
+COMMENT ON FUNCTION "public"."set_super_admin_status"("user_id" "uuid", "super_admin_status" boolean) IS 'Set super admin status for a user. Only super admins can use this function.';
+
+
+
 CREATE OR REPLACE FUNCTION "public"."set_user_monthly_limit"("user_uuid" "uuid", "new_limit" integer) RETURNS "public"."user_calculation_limits"
     LANGUAGE "plpgsql" SECURITY DEFINER
+    SET "search_path" TO ''
     AS $$
 DECLARE
     limit_record user_calculation_limits;
@@ -1326,6 +1370,7 @@ ALTER FUNCTION "public"."set_user_monthly_limit"("user_uuid" "uuid", "new_limit"
 
 CREATE OR REPLACE FUNCTION "public"."trigger_set_timestamp"() RETURNS "trigger"
     LANGUAGE "plpgsql"
+    SET "search_path" TO ''
     AS $$
 BEGIN
   NEW.updated_at = now();
@@ -1339,6 +1384,7 @@ ALTER FUNCTION "public"."trigger_set_timestamp"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."update_calculation_metadata_updated_at"() RETURNS "trigger"
     LANGUAGE "plpgsql"
+    SET "search_path" TO ''
     AS $$
 BEGIN
     NEW.updated_at = now();
@@ -1352,6 +1398,7 @@ ALTER FUNCTION "public"."update_calculation_metadata_updated_at"() OWNER TO "pos
 
 CREATE OR REPLACE FUNCTION "public"."update_feedback_updated_at"() RETURNS "trigger"
     LANGUAGE "plpgsql"
+    SET "search_path" TO ''
     AS $$
 BEGIN
     NEW.updated_at = NOW();
@@ -1365,6 +1412,7 @@ ALTER FUNCTION "public"."update_feedback_updated_at"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."update_project_constraints_updated_at"() RETURNS "trigger"
     LANGUAGE "plpgsql"
+    SET "search_path" TO ''
     AS $$
 BEGIN
     NEW.updated_at = now();
@@ -1378,6 +1426,7 @@ ALTER FUNCTION "public"."update_project_constraints_updated_at"() OWNER TO "post
 
 CREATE OR REPLACE FUNCTION "public"."update_updated_at_column"() RETURNS "trigger"
     LANGUAGE "plpgsql"
+    SET "search_path" TO ''
     AS $$
 BEGIN
     NEW.updated_at = NOW();
@@ -1391,6 +1440,7 @@ ALTER FUNCTION "public"."update_updated_at_column"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "schema_type" "text") RETURNS "void"
     LANGUAGE "plpgsql"
+    SET "search_path" TO ''
     AS $$
 DECLARE
   param_name TEXT;
@@ -1443,6 +1493,7 @@ ALTER FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "sch
 
 CREATE OR REPLACE FUNCTION "public"."validate_units_structure"() RETURNS "trigger"
     LANGUAGE "plpgsql"
+    SET "search_path" TO ''
     AS $$
 BEGIN
   -- Validate input_schema
@@ -2352,7 +2403,7 @@ ALTER TABLE ONLY "public"."user_calculation_limits"
 
 
 
-CREATE POLICY "Admins can insert feedback" ON "public"."feedback" FOR INSERT WITH CHECK ((((("auth"."jwt"() ->> 'user_metadata'::"text"))::"jsonb" ->> 'role'::"text") = 'admin'::"text"));
+CREATE POLICY "Admins can insert feedback" ON "public"."feedback" FOR INSERT WITH CHECK ("public"."is_super_admin"());
 
 
 
@@ -2364,7 +2415,7 @@ CREATE POLICY "Admins can modify calculation metadata" ON "public"."calculation_
 
 
 
-CREATE POLICY "Admins can update all feedback" ON "public"."feedback" FOR UPDATE USING ((((("auth"."jwt"() ->> 'user_metadata'::"text"))::"jsonb" ->> 'role'::"text") = 'admin'::"text"));
+CREATE POLICY "Admins can update all feedback" ON "public"."feedback" FOR UPDATE USING ("public"."is_super_admin"()) WITH CHECK ("public"."is_super_admin"());
 
 
 
@@ -2376,7 +2427,7 @@ CREATE POLICY "Admins can view all calculation results" ON "public"."calculation
 
 
 
-CREATE POLICY "Admins can view all feedback" ON "public"."feedback" FOR SELECT USING ((((("auth"."jwt"() ->> 'user_metadata'::"text"))::"jsonb" ->> 'role'::"text") = 'admin'::"text"));
+CREATE POLICY "Admins can view all feedback" ON "public"."feedback" FOR SELECT USING ("public"."is_super_admin"());
 
 
 
@@ -2649,6 +2700,9 @@ ALTER TABLE "public"."calculation_flows" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."calculation_metadata" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."calculation_metadata_backup_20251001" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."calculation_results" ENABLE ROW LEVEL SECURITY;
