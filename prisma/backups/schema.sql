@@ -70,19 +70,16 @@ CREATE OR REPLACE FUNCTION "public"."can_user_run_calculation"("user_uuid" "uuid
     LANGUAGE "plpgsql" SECURITY DEFINER
     SET "search_path" TO ''
     AS $$
-DECLARE
-    limit_record user_calculation_limits;
-BEGIN
-    -- Get or create the user's limit record
-    limit_record := get_or_create_user_calculation_limit(user_uuid);
-    
-    -- Return the result
-    RETURN QUERY SELECT 
-        limit_record.calculation_count < limit_record.monthly_limit as can_run,
-        limit_record.calculation_count as current_count,
-        limit_record.monthly_limit as monthly_limit,
-        GREATEST(0, limit_record.monthly_limit - limit_record.calculation_count) as remaining_calculations;
-END;
+declare
+  rec public.user_calculation_limits;
+begin
+  rec := public.get_or_create_user_calculation_limit(user_uuid);
+  return query
+  select rec.calculation_count < rec.monthly_limit as can_run,
+         rec.calculation_count as current_count,
+         rec.monthly_limit as monthly_limit,
+         greatest(rec.monthly_limit - rec.calculation_count, 0) as remaining_calculations;
+end;
 $$;
 
 
@@ -252,6 +249,16 @@ ALTER FUNCTION "public"."convert_schema_to_new_format"("old_schema" "jsonb") OWN
 
 COMMENT ON FUNCTION "public"."convert_schema_to_new_format"("old_schema" "jsonb") IS 'Converts entire schema object from old to new format';
 
+
+
+CREATE OR REPLACE FUNCTION "public"."current_month"() RETURNS "text"
+    LANGUAGE "sql" STABLE
+    AS $$
+  select to_char(timezone('UTC', now()), 'YYYY-MM');
+$$;
+
+
+ALTER FUNCTION "public"."current_month"() OWNER TO "postgres";
 
 
 CREATE OR REPLACE FUNCTION "public"."fix_param_schema_dimension"("param_schema" "jsonb") RETURNS "jsonb"
@@ -607,7 +614,7 @@ CREATE TABLE IF NOT EXISTS "public"."user_calculation_limits" (
 ALTER TABLE "public"."user_calculation_limits" OWNER TO "postgres";
 
 
-COMMENT ON TABLE "public"."user_calculation_limits" IS 'Tracks monthly calculation usage limits for users';
+COMMENT ON TABLE "public"."user_calculation_limits" IS 'Tracks user calculation counts and limits per month (YYYY-MM).';
 
 
 
@@ -627,27 +634,22 @@ CREATE OR REPLACE FUNCTION "public"."get_or_create_user_calculation_limit"("user
     LANGUAGE "plpgsql" SECURITY DEFINER
     SET "search_path" TO ''
     AS $$
-DECLARE
-    current_month text;
-    limit_record user_calculation_limits;
-BEGIN
-    -- Get current month in YYYY-MM format
-    current_month := to_char(now(), 'YYYY-MM');
-    
-    -- Try to get existing record
-    SELECT * INTO limit_record 
-    FROM user_calculation_limits 
-    WHERE user_id = user_uuid AND month_year = current_month;
-    
-    -- If no record exists, create one
-    IF limit_record IS NULL THEN
-        INSERT INTO user_calculation_limits (user_id, month_year, calculation_count, monthly_limit)
-        VALUES (user_uuid, current_month, 0, 100) -- Default limit of 100
-        RETURNING * INTO limit_record;
-    END IF;
-    
-    RETURN limit_record;
-END;
+declare
+  result public.user_calculation_limits;
+  m text := to_char(timezone('UTC', now()), 'YYYY-MM');
+begin
+  select * into result
+  from public.user_calculation_limits
+  where user_id = user_uuid and month_year = m;
+
+  if not found then
+    insert into public.user_calculation_limits(user_id, month_year)
+    values (user_uuid, m)
+    returning * into result;
+  end if;
+
+  return result;
+end;
 $$;
 
 
@@ -686,25 +688,17 @@ COMMENT ON FUNCTION "public"."get_super_admin_users"() IS 'Get list of all super
 
 
 CREATE OR REPLACE FUNCTION "public"."get_user_calculation_usage_history"("user_uuid" "uuid") RETURNS TABLE("month_year" "text", "calculation_count" integer, "monthly_limit" integer, "usage_percentage" numeric)
-    LANGUAGE "plpgsql" SECURITY DEFINER
+    LANGUAGE "sql" SECURITY DEFINER
     SET "search_path" TO ''
     AS $$
-BEGIN
-    RETURN QUERY
-    SELECT 
-        ucl.month_year,
-        ucl.calculation_count,
-        ucl.monthly_limit,
-        CASE 
-            WHEN ucl.monthly_limit > 0 THEN 
-                ROUND((ucl.calculation_count::numeric / ucl.monthly_limit::numeric) * 100, 2)
-            ELSE 0 
-        END as usage_percentage
-    FROM user_calculation_limits ucl
-    WHERE ucl.user_id = user_uuid
-    ORDER BY ucl.month_year DESC
-    LIMIT 12;
-END;
+  select ucl.month_year,
+         ucl.calculation_count,
+         ucl.monthly_limit,
+         case when ucl.monthly_limit > 0 then round(ucl.calculation_count::numeric * 100.0 / ucl.monthly_limit, 2) else 0 end as usage_percentage
+  from public.user_calculation_limits ucl
+  where ucl.user_id = user_uuid
+  order by ucl.month_year desc
+  limit 12;
 $$;
 
 
@@ -715,20 +709,19 @@ CREATE OR REPLACE FUNCTION "public"."increment_user_calculation_count"("user_uui
     LANGUAGE "plpgsql" SECURITY DEFINER
     SET "search_path" TO ''
     AS $$
-DECLARE
-    limit_record user_calculation_limits;
-BEGIN
-    -- Get or create the user's limit record
-    limit_record := get_or_create_user_calculation_limit(user_uuid);
-    
-    -- Increment the count
-    UPDATE user_calculation_limits 
-    SET calculation_count = calculation_count + 1
-    WHERE user_id = user_uuid AND month_year = limit_record.month_year
-    RETURNING * INTO limit_record;
-    
-    RETURN limit_record;
-END;
+declare
+  rec public.user_calculation_limits;
+  m text := to_char(timezone('UTC', now()), 'YYYY-MM');
+begin
+  rec := public.get_or_create_user_calculation_limit(user_uuid);
+  update public.user_calculation_limits
+  set calculation_count = calculation_count + 1,
+      updated_at = now()
+  where id = rec.id
+  returning * into rec;
+
+  return rec;
+end;
 $$;
 
 
@@ -964,33 +957,17 @@ CREATE OR REPLACE FUNCTION "public"."reset_user_calculation_count"("user_uuid" "
     LANGUAGE "plpgsql" SECURITY DEFINER
     SET "search_path" TO ''
     AS $$
-DECLARE
-    limit_record user_calculation_limits;
-    current_month text;
-BEGIN
-    -- Check if caller is super admin
-    IF NOT is_super_admin(auth.uid()) THEN
-        RAISE EXCEPTION 'Only super admins can reset calculation counts';
-    END IF;
-    
-    -- Get current month
-    current_month := to_char(now(), 'YYYY-MM');
-    
-    -- Update the count to 0
-    UPDATE user_calculation_limits 
-    SET calculation_count = 0
-    WHERE user_id = user_uuid AND month_year = current_month
-    RETURNING * INTO limit_record;
-    
-    -- If no record was updated, create one
-    IF limit_record IS NULL THEN
-        INSERT INTO user_calculation_limits (user_id, month_year, calculation_count, monthly_limit)
-        VALUES (user_uuid, current_month, 0, 100)
-        RETURNING * INTO limit_record;
-    END IF;
-    
-    RETURN limit_record;
-END;
+declare
+  rec public.user_calculation_limits;
+begin
+  rec := public.get_or_create_user_calculation_limit(user_uuid);
+  update public.user_calculation_limits
+  set calculation_count = 0,
+      updated_at = now()
+  where id = rec.id
+  returning * into rec;
+  return rec;
+end;
 $$;
 
 
@@ -1341,27 +1318,17 @@ CREATE OR REPLACE FUNCTION "public"."set_user_monthly_limit"("user_uuid" "uuid",
     LANGUAGE "plpgsql" SECURITY DEFINER
     SET "search_path" TO ''
     AS $$
-DECLARE
-    limit_record user_calculation_limits;
-    current_month text;
-BEGIN
-    -- Check if caller is super admin
-    IF NOT is_super_admin(auth.uid()) THEN
-        RAISE EXCEPTION 'Only super admins can modify calculation limits';
-    END IF;
-    
-    -- Get current month
-    current_month := to_char(now(), 'YYYY-MM');
-    
-    -- Update or insert the limit record
-    INSERT INTO user_calculation_limits (user_id, month_year, calculation_count, monthly_limit)
-    VALUES (user_uuid, current_month, 0, new_limit)
-    ON CONFLICT (user_id, month_year) 
-    DO UPDATE SET monthly_limit = new_limit
-    RETURNING * INTO limit_record;
-    
-    RETURN limit_record;
-END;
+declare
+  rec public.user_calculation_limits;
+begin
+  rec := public.get_or_create_user_calculation_limit(user_uuid);
+  update public.user_calculation_limits
+  set monthly_limit = new_limit,
+      updated_at = now()
+  where id = rec.id
+  returning * into rec;
+  return rec;
+end;
 $$;
 
 
@@ -1438,7 +1405,7 @@ $$;
 ALTER FUNCTION "public"."update_updated_at_column"() OWNER TO "postgres";
 
 
-CREATE OR REPLACE FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "schema_type" "text") RETURNS "void"
+CREATE OR REPLACE FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "schema_type" "anyelement") RETURNS "void"
     LANGUAGE "plpgsql"
     SET "search_path" TO ''
     AS $$
@@ -1448,7 +1415,11 @@ DECLARE
   units_data JSONB;
   metric_config JSONB;
   imperial_config JSONB;
+  schema_type_text TEXT;
 BEGIN
+  -- Convert schema_type to text safely
+  schema_type_text := COALESCE(schema_type::TEXT, 'unknown');
+  
   FOR param_name IN SELECT jsonb_object_keys(schema)
   LOOP
     param_data := schema->param_name;
@@ -1458,7 +1429,7 @@ BEGIN
     IF units_data IS NOT NULL THEN
       -- Validate that metric and imperial are objects
       IF jsonb_typeof(units_data->'metric') != 'object' OR jsonb_typeof(units_data->'imperial') != 'object' THEN
-        RAISE EXCEPTION 'units in % schema for parameter % must have metric and imperial as objects', schema_type, param_name;
+        RAISE EXCEPTION 'units in % schema for parameter % must have metric and imperial as objects', schema_type_text, param_name;
       END IF;
       
       metric_config := units_data->'metric';
@@ -1466,21 +1437,21 @@ BEGIN
       
       -- Validate metric config has required fields
       IF NOT (metric_config ? 'unit') THEN
-        RAISE EXCEPTION 'metric config in % schema for parameter % must have unit field', schema_type, param_name;
+        RAISE EXCEPTION 'metric config in % schema for parameter % must have unit field', schema_type_text, param_name;
       END IF;
       
       -- Validate imperial config has required fields
       IF NOT (imperial_config ? 'unit') THEN
-        RAISE EXCEPTION 'imperial config in % schema for parameter % must have unit field', schema_type, param_name;
+        RAISE EXCEPTION 'imperial config in % schema for parameter % must have unit field', schema_type_text, param_name;
       END IF;
       
       -- Validate unit fields are strings
       IF jsonb_typeof(metric_config->'unit') != 'string' THEN
-        RAISE EXCEPTION 'metric unit in % schema for parameter % must be a string', schema_type, param_name;
+        RAISE EXCEPTION 'metric unit in % schema for parameter % must be a string', schema_type_text, param_name;
       END IF;
       
       IF jsonb_typeof(imperial_config->'unit') != 'string' THEN
-        RAISE EXCEPTION 'imperial unit in % schema for parameter % must be a string', schema_type, param_name;
+        RAISE EXCEPTION 'imperial unit in % schema for parameter % must be a string', schema_type_text, param_name;
       END IF;
     END IF;
   END LOOP;
@@ -1488,7 +1459,7 @@ END;
 $$;
 
 
-ALTER FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "schema_type" "text") OWNER TO "postgres";
+ALTER FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "schema_type" "anyelement") OWNER TO "postgres";
 
 
 CREATE OR REPLACE FUNCTION "public"."validate_units_structure"() RETURNS "trigger"
@@ -1498,12 +1469,12 @@ CREATE OR REPLACE FUNCTION "public"."validate_units_structure"() RETURNS "trigge
 BEGIN
   -- Validate input_schema
   IF NEW.input_schema IS NOT NULL THEN
-    PERFORM validate_schema_units_structure(NEW.input_schema, 'input');
+    PERFORM public.validate_schema_units_structure(NEW.input_schema, 'input'::TEXT);
   END IF;
   
   -- Validate output_schema
   IF NEW.output_schema IS NOT NULL THEN
-    PERFORM validate_schema_units_structure(NEW.output_schema, 'output');
+    PERFORM public.validate_schema_units_structure(NEW.output_schema, 'output'::TEXT);
   END IF;
   
   RETURN NEW;
@@ -2613,6 +2584,10 @@ CREATE POLICY "Users can update own open feedback" ON "public"."feedback" FOR UP
 
 
 
+CREATE POLICY "Users can update own rows" ON "public"."user_calculation_limits" FOR UPDATE USING (("auth"."uid"() = "user_id"));
+
+
+
 CREATE POLICY "Users can update their own calculation flows" ON "public"."calculation_flows" FOR UPDATE USING (("auth"."uid"() = "user_id"));
 
 
@@ -2650,6 +2625,10 @@ CREATE POLICY "Users can view folders of their projects" ON "public"."folders" F
 
 
 CREATE POLICY "Users can view own feedback" ON "public"."feedback" FOR SELECT USING (("auth"."uid"() = "user_id"));
+
+
+
+CREATE POLICY "Users can view own rows" ON "public"."user_calculation_limits" FOR SELECT USING (("auth"."uid"() = "user_id"));
 
 
 
@@ -2936,6 +2915,12 @@ GRANT ALL ON FUNCTION "public"."convert_schema_to_new_format"("old_schema" "json
 
 
 
+GRANT ALL ON FUNCTION "public"."current_month"() TO "anon";
+GRANT ALL ON FUNCTION "public"."current_month"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."current_month"() TO "service_role";
+
+
+
 GRANT ALL ON FUNCTION "public"."fix_param_schema_dimension"("param_schema" "jsonb") TO "anon";
 GRANT ALL ON FUNCTION "public"."fix_param_schema_dimension"("param_schema" "jsonb") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."fix_param_schema_dimension"("param_schema" "jsonb") TO "service_role";
@@ -3074,9 +3059,9 @@ GRANT ALL ON FUNCTION "public"."update_updated_at_column"() TO "service_role";
 
 
 
-GRANT ALL ON FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "schema_type" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "schema_type" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "schema_type" "text") TO "service_role";
+GRANT ALL ON FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "schema_type" "anyelement") TO "anon";
+GRANT ALL ON FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "schema_type" "anyelement") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."validate_schema_units_structure"("schema" "jsonb", "schema_type" "anyelement") TO "service_role";
 
 
 
