@@ -4,7 +4,7 @@ SET session_replication_role = replica;
 -- PostgreSQL database dump
 --
 
--- \restrict q6DMbyBMd964YfD7B7sFgOBVHD1YkQ7Ec2WpHAzQFVYLHBsc5DVFJg9zegBCINN
+-- \restrict Qx2wcs7xSw7P1Yr3Y3Gqd8mYfLtxWdTfiMKKhrZdbP5nfs4xWQAh37ddUwQQjFk
 
 -- Dumped from database version 15.8
 -- Dumped by pg_dump version 17.6
@@ -1306,6 +1306,11 @@ COPY "auth"."audit_log_entries" ("instance_id", "id", "payload", "created_at", "
 00000000-0000-0000-0000-000000000000	d71f9f7a-2b11-4f51-ac4f-1bc8d9bedd85	{"action":"token_refreshed","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-16 01:17:21.09+00	
 00000000-0000-0000-0000-000000000000	f1ce78b7-3fbf-4c31-b333-7a3a31443b27	{"action":"token_revoked","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-16 01:17:21.122297+00	
 00000000-0000-0000-0000-000000000000	69593c41-4bdc-416e-9c6d-cce8c4a14099	{"action":"token_refreshed","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-16 14:09:19.00197+00	
+00000000-0000-0000-0000-000000000000	383a9e76-d740-44b9-8296-a0b0b66c7bca	{"action":"token_refreshed","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-21 10:25:27.596018+00	
+00000000-0000-0000-0000-000000000000	ab4926f8-b6cf-41f0-ae8c-f01f8be3d790	{"action":"token_revoked","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-21 10:25:27.667397+00	
+00000000-0000-0000-0000-000000000000	52ebf223-36de-47c1-aecb-68632f1bab3d	{"action":"token_refreshed","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-21 12:11:46.610137+00	
+00000000-0000-0000-0000-000000000000	5ea3df5b-fc01-4b8e-a602-0f7fa7407436	{"action":"token_revoked","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2025-10-21 12:11:46.649524+00	
+00000000-0000-0000-0000-000000000000	6c7f9d8a-d593-4514-86ea-e7f8c558fb85	{"action":"user_modified","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"user"}	2025-10-21 12:48:14.649994+00	
 \.
 
 
@@ -1324,7 +1329,7 @@ COPY "auth"."flow_state" ("id", "user_id", "auth_code", "code_challenge_method",
 COPY "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous", "company", "profession", "country", "city") FROM stdin;
 00000000-0000-0000-0000-000000000000	b8c2ca65-ad45-4310-af57-49368e91d3bb	authenticated	authenticated	david_naylor@icloud.com	$2a$10$tWaW93e0SImQQFDGOPw6E.80EvSYa5nbV8BJ.MlFfCiAFZ3HzhU5W	2025-04-09 07:35:33.594117+00	\N		\N		\N			\N	2025-04-09 07:35:33.599907+00	{"provider": "email", "providers": ["email"]}	{"sub": "b8c2ca65-ad45-4310-af57-49368e91d3bb", "email": "david_naylor@icloud.com", "full_name": "David N", "email_verified": true, "phone_verified": false}	f	2025-04-09 07:35:33.536089+00	2025-04-09 07:35:33.628671+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
 00000000-0000-0000-0000-000000000000	bc7b3d31-990b-4f1e-975d-f2bf9605f160	authenticated	authenticated	john@gmail.com	$2a$10$hPEmhja05wbjeDHDbMCLMeYxyiwTnSkD0P1HfpBaqTzJnNzJbt.h.	2025-04-10 05:23:48.698628+00	\N		\N		\N			\N	2025-10-20 11:27:34.000697+00	{"provider": "email", "providers": ["email"]}	{"sub": "bc7b3d31-990b-4f1e-975d-f2bf9605f160", "city": "Cambridge", "email": "john@gmail.com", "company": "Mott MacDonald", "country": "United Kingdom", "full_name": "John Naylor", "last_name": "Naylor", "first_name": "John", "profession": "Electrical Engineer", "avatar_emoji": "🐸", "email_verified": true, "phone_verified": false}	f	2025-04-10 05:23:48.649145+00	2025-10-20 11:27:34.029312+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
-00000000-0000-0000-0000-000000000000	89a501d9-e11e-4215-8c0c-1b071badf9ec	authenticated	authenticated	djnaylor97@gmail.com	$2a$06$rMH7VZJ5cNmVdVxFuxsw9OU2UIe.BdVNDFjoWJVt0.Qr9jPrI7fqi	2025-04-09 05:50:08.723654+00	\N		\N		\N			\N	2025-10-12 09:12:45.679122+00	{"provider": "email", "providers": ["email"]}	{"city": "London", "company": "WSP", "country": "", "full_name": "David Naylor", "last_name": "Naylor", "first_name": "David", "profession": "Mech", "avatar_emoji": "👨‍💻", "email_verified": true}	t	2025-04-09 05:50:08.66869+00	2025-10-20 23:49:14.135341+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
+00000000-0000-0000-0000-000000000000	89a501d9-e11e-4215-8c0c-1b071badf9ec	authenticated	authenticated	djnaylor97@gmail.com	$2a$06$rMH7VZJ5cNmVdVxFuxsw9OU2UIe.BdVNDFjoWJVt0.Qr9jPrI7fqi	2025-04-09 05:50:08.723654+00	\N		\N		\N			\N	2025-10-12 09:12:45.679122+00	{"provider": "email", "providers": ["email"]}	{"city": "London", "company": "WSP", "country": "United Kingdom", "full_name": "David Naylor", "last_name": "Naylor", "first_name": "David", "profession": "Mechanical", "avatar_emoji": "👨‍💻", "email_verified": true}	t	2025-04-09 05:50:08.66869+00	2025-10-21 12:48:14.638281+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
 \.
 
 
@@ -1361,7 +1366,7 @@ COPY "auth"."oauth_clients" ("id", "client_secret_hash", "registration_type", "r
 
 COPY "auth"."sessions" ("id", "user_id", "created_at", "updated_at", "factor_id", "aal", "not_after", "refreshed_at", "user_agent", "ip", "tag", "oauth_client_id") FROM stdin;
 7ffa000e-004a-40f2-aadd-aac017aeb4ad	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-10-20 11:27:34.001905+00	2025-10-20 11:27:34.001905+00	\N	aal1	\N	\N	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15	110.77.235.23	\N	\N
-6e711df7-4866-4712-8424-9d21c01c710b	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-10-12 09:12:45.681563+00	2025-10-20 23:49:14.157953+00	\N	aal1	\N	2025-10-20 23:49:14.157867	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15	110.77.235.34	\N	\N
+6e711df7-4866-4712-8424-9d21c01c710b	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-10-12 09:12:45.681563+00	2025-10-21 12:11:46.729236+00	\N	aal1	\N	2025-10-21 12:11:46.729135	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15	122.154.45.22	\N	\N
 \.
 
 
@@ -1472,7 +1477,9 @@ COPY "auth"."refresh_tokens" ("instance_id", "id", "token", "user_id", "revoked"
 00000000-0000-0000-0000-000000000000	626	fpqhalnmvhtb	89a501d9-e11e-4215-8c0c-1b071badf9ec	t	2025-10-20 02:48:46.856435+00	2025-10-20 03:47:15.47634+00	elfzcubk56w5	6e711df7-4866-4712-8424-9d21c01c710b
 00000000-0000-0000-0000-000000000000	637	kjb7tapd7wms	89a501d9-e11e-4215-8c0c-1b071badf9ec	t	2025-10-20 20:40:03.965822+00	2025-10-20 21:55:31.510537+00	vt2ssdhmpj64	6e711df7-4866-4712-8424-9d21c01c710b
 00000000-0000-0000-0000-000000000000	638	ap7kfzlbuuf5	89a501d9-e11e-4215-8c0c-1b071badf9ec	t	2025-10-20 21:55:31.537224+00	2025-10-20 23:49:14.072934+00	kjb7tapd7wms	6e711df7-4866-4712-8424-9d21c01c710b
-00000000-0000-0000-0000-000000000000	639	f4n6suek24al	89a501d9-e11e-4215-8c0c-1b071badf9ec	f	2025-10-20 23:49:14.112856+00	2025-10-20 23:49:14.112856+00	ap7kfzlbuuf5	6e711df7-4866-4712-8424-9d21c01c710b
+00000000-0000-0000-0000-000000000000	639	f4n6suek24al	89a501d9-e11e-4215-8c0c-1b071badf9ec	t	2025-10-20 23:49:14.112856+00	2025-10-21 10:25:27.675202+00	ap7kfzlbuuf5	6e711df7-4866-4712-8424-9d21c01c710b
+00000000-0000-0000-0000-000000000000	640	wossxqppqauy	89a501d9-e11e-4215-8c0c-1b071badf9ec	t	2025-10-21 10:25:27.726159+00	2025-10-21 12:11:46.66444+00	f4n6suek24al	6e711df7-4866-4712-8424-9d21c01c710b
+00000000-0000-0000-0000-000000000000	641	lncxki5eixeb	89a501d9-e11e-4215-8c0c-1b071badf9ec	f	2025-10-21 12:11:46.694769+00	2025-10-21 12:11:46.694769+00	wossxqppqauy	6e711df7-4866-4712-8424-9d21c01c710b
 \.
 
 
@@ -1902,8 +1909,8 @@ c9f83910-c1c3-41cc-900f-b1dc91a6e5dd	in this folder	6b392402-f448-45dd-9efc-73fc
 COPY "public"."calculation_flows" ("id", "name", "description", "nodes", "edges", "project_id", "user_id", "created_at", "updated_at", "folder_id") FROM stdin;
 a9ebd967-f883-4bcc-a4f7-c3fdca53a78b	New Flow		[{"id": "node-1753143804380", "position": {"x": -216.82582376188728, "y": -1170.8588352183}, "input_values": {"occupation": "", "air_changes_per_hour": ""}, "calculation_id": "ac_hr_vs_ofr"}, {"id": "node-1753143809466", "position": {"x": 828.6353101719134, "y": -25.193524807035185}, "calculation_id": "ofr"}, {"id": "node-1753162710163", "error": "Request failed with status code 500", "position": {"x": 418.4226549669422, "y": -826.4706956329254}, "input_values": {"delta_t": "", "density": 10000, "cp_metric": 4.18, "flow_rate": 1}, "calculation_id": "heat_transfer_rate", "is_calculating": false}]	[{"id": "edge-1752492581886-max_duct_velocity", "source_node_id": "node-1752492552950", "target_node_id": "node-1752492581886", "target_input_id": "max_duct_velocity", "source_output_id": "velocity"}, {"id": "edge-1752492590886-height_mm", "source_node_id": "node-1752492581886", "target_node_id": "node-1752492590886", "target_input_id": "height_mm", "source_output_id": "min_diameter_mm"}, {"id": "edge-1752492689302-max_velocity", "source_node_id": "node-1752492552950", "target_node_id": "node-1752492689302", "target_input_id": "max_velocity", "source_output_id": "velocity"}, {"id": "edge-1752492724751-volume_flow_rate", "source_node_id": "node-1752492689302", "target_node_id": "node-1752492724751", "target_input_id": "volume_flow_rate", "source_output_id": "max_volume_flow_rate"}, {"id": "edge-1752493157871", "source_node_id": "node-1752492581886", "target_node_id": "node-1752492590886", "target_input_id": "width_mm", "source_output_id": "min_diameter_mm"}]	6b392402-f448-45dd-9efc-73fcd8d070cc	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-07-06 07:58:15.419565+00	2025-10-20 11:28:08.507285+00	c9f83910-c1c3-41cc-900f-b1dc91a6e5dd
 7809b913-6c41-4c75-b0b5-3c5f289d2b1b	inputs test		[{"id": "node-1751672981908", "results": {"method": "OFR", "volume_flow_rate": 0.1}, "position": {"x": 255.29450388065004, "y": 193.00417669128421}, "input_values": {"occupation": 10, "room_volume": 20, "air_per_person": 10, "air_changes_per_hour": 1}, "calculation_id": "ac_hr_vs_ofr", "is_calculating": false}, {"id": "node-1751673003723", "results": {"velocity": 0.2}, "position": {"x": 859.889781884515, "y": 111.45941466726757}, "input_values": {"duct_area": 0.5}, "calculation_id": "air_velocity", "is_calculating": false}, {"id": "node-1751698596700", "position": {"x": 792.2422696320415, "y": 331.5771783575644}, "calculation_id": "min_duct_diameter"}, {"id": "node-1751699023552", "position": {"x": 796.7946430536775, "y": -137.61954133105772}, "calculation_id": "ach_from_vfr"}]	[{"id": "edge-1751673003723-volume_flow_rate", "source_node_id": "node-1751672981908", "target_node_id": "node-1751673003723", "target_input_id": "volume_flow_rate", "source_output_id": "volume_flow_rate"}, {"id": "edge-1751698596701-air_volume", "source_node_id": "node-1751672981908", "target_node_id": "node-1751698596700", "target_input_id": "air_volume", "source_output_id": "volume_flow_rate"}, {"id": "edge-1751699023552-volume_flow_rate", "source_node_id": "node-1751672981908", "target_node_id": "node-1751699023552", "target_input_id": "volume_flow_rate", "source_output_id": "volume_flow_rate"}]	\N	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-07-04 23:49:29.915+00	2025-07-26 07:46:27.233712+00	\N
+52bab500-225f-49da-b0ea-9451b80a1537	New Flow		[{"id": "node-1760966444203", "results": {"velocity": 4.5}, "position": {"x": -183.09640770470003, "y": -78.50724948776127}, "input_values": {"duct_area": 2, "volume_flow_rate": 9}, "calculation_id": "air_velocity", "is_calculating": false}, {"id": "node-1760966471809", "position": {"x": 403.24447399921326, "y": 61.99471238741434}, "input_values": {"L": "", "A_ref": 2}, "calculation_id": "amplitude_from_decibel", "is_calculating": true}]	[{"id": "edge-1761050593453", "source_node_id": "node-1760966444203", "target_node_id": "node-1760966471809", "target_input_id": "L", "source_output_id": "velocity"}]	\N	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-10-19 09:47:28.272692+00	2025-10-21 12:44:08.290004+00	\N
 4363cbba-e809-4604-9d61-007ed7acf424	trying to get rid of errors		[{"id": "node-1753964232311", "results": {"velocity": 10}, "position": {"x": 135.9707078948341, "y": 157.21768938739544}, "input_values": {"duct_area": 2, "volume_flow_rate": 20}, "calculation_id": "air_velocity", "is_calculating": false}]	[]	\N	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-07-06 07:52:43.305+00	2025-07-31 12:18:28.817034+00	\N
-52bab500-225f-49da-b0ea-9451b80a1537	New Flow		[{"id": "node-1760966444203", "results": {"velocity": 4.5}, "position": {"x": -183.09640770470003, "y": -78.50724948776127}, "input_values": {"duct_area": 2, "volume_flow_rate": 9}, "calculation_id": "air_velocity", "is_calculating": false}, {"id": "node-1760966471809", "position": {"x": 403.24447399921326, "y": 61.99471238741434}, "input_values": {"L": "", "A_ref": 2}, "calculation_id": "amplitude_from_decibel", "is_calculating": false}]	[]	\N	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-10-19 09:47:28.272692+00	2025-10-20 13:23:57.00245+00	\N
 b642705d-ab6e-4d23-98e0-f74888222ae4	New Flow		[{"id": "node-1754824237054", "position": {"x": 152.8205987475644, "y": 190.49726966380027}, "input_values": {"room_volume": 3, "air_changes_per_hour": ""}, "calculation_id": "vfr_from_ach", "is_calculating": true}]	[]	\N	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-08-07 11:14:06.102533+00	2025-10-20 11:29:40.745924+00	\N
 6c4182e9-8fe7-46f2-8065-0d8f7dd52106	New Flow		[{"id": "node-1754565124204", "results": {"density": 1.188817469098744, "viscosity": 0.000018205483767398613, "specific_heat": 1.0061219366872036, "thermal_conductivity": 0.025873401711017225}, "position": {"x": 37.495973033642116, "y": 19.723388237182085}, "input_values": {"pressure": 100000, "temperature": 20}, "calculation_id": "air_properties", "is_calculating": false}, {"id": "node-1754565150372", "position": {"x": 618.0027572575441, "y": -7.27801539534936}, "input_values": {"velocity": 5}, "calculation_id": "reynolds_number"}]	[{"id": "edge-1754565150373-fluid_density", "source_node_id": "node-1754565124204", "target_node_id": "node-1754565150372", "target_input_id": "fluid_density", "source_output_id": "density"}, {"id": "edge-1754565150373-fluid_viscosity", "source_node_id": "node-1754565124204", "target_node_id": "node-1754565150372", "target_input_id": "fluid_viscosity", "source_output_id": "viscosity"}]	\N	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-08-07 11:12:20.529822+00	2025-08-07 11:13:05.200107+00	\N
 \.
@@ -2136,6 +2143,7 @@ COPY "public"."folder_templates" ("id", "name", "folders", "user_id", "is_defaul
 1aba147a-3d1b-4ac7-a72d-8ccc6992db7a	Design Sequence	["Concept Design", "Schematic Design", "Design Development", "Construction Docs"]	\N	t	2025-07-01 11:28:36.534757+00	2025-07-01 11:28:36.534757+00
 3480cfe4-8847-4706-a223-9474d6f54f0c	Ventilation Project	["Preliminary Calculations", "Duct Layouts", "Equipment Schedules", "Commissioning"]	\N	t	2025-07-01 11:28:36.534757+00	2025-07-01 11:28:36.534757+00
 bf1ae274-4b3a-4aa2-838a-9075fd081c7d	Mechanical	["Heating", "Cooling", "Ventilation", "Gas"]	bc7b3d31-990b-4f1e-975d-f2bf9605f160	f	2025-07-01 11:30:12.522215+00	2025-07-14 11:42:42.437782+00
+3a4cd589-7901-4dd3-a3b7-5024fb2c311c	Electrical	["Panels", "Cables"]	89a501d9-e11e-4215-8c0c-1b071badf9ec	f	2025-10-21 12:46:01.255532+00	2025-10-21 12:46:01.255532+00
 \.
 
 
@@ -2168,7 +2176,7 @@ COPY "public"."user_calculation_limits" ("id", "user_id", "month_year", "calcula
 2249fcb9-3c20-4588-8dba-106a65e3db8d	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-08	7	100	2025-08-12 05:24:10.625787+00	2025-08-26 16:05:42.125262+00
 3d6bb90e-c5b1-43cc-b36c-6a84f40368fe	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-09	36	100	2025-09-08 12:21:37.291326+00	2025-09-29 12:57:12.04321+00
 37c0fc2a-8f62-4d5c-9f1e-db1357d0dbf3	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-08	31	100	2025-08-12 04:48:42.90199+00	2025-08-30 04:22:02.363237+00
-7d8eb94f-2c3e-4743-b422-8233b21d22e1	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-10	33	100	2025-10-12 03:56:32.34885+00	2025-10-20 14:05:33.818643+00
+7d8eb94f-2c3e-4743-b422-8233b21d22e1	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-10	34	100	2025-10-12 03:56:32.34885+00	2025-10-21 12:17:43.696272+00
 \.
 
 
@@ -2224,13 +2232,13 @@ COPY "storage"."s3_multipart_uploads_parts" ("id", "upload_id", "size", "part_nu
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: supabase_auth_admin
 --
 
-SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 639, true);
+SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 641, true);
 
 
 --
 -- PostgreSQL database dump complete
 --
 
--- \unrestrict q6DMbyBMd964YfD7B7sFgOBVHD1YkQ7Ec2WpHAzQFVYLHBsc5DVFJg9zegBCINN
+-- \unrestrict Qx2wcs7xSw7P1Yr3Y3Gqd8mYfLtxWdTfiMKKhrZdbP5nfs4xWQAh37ddUwQQjFk
 
 RESET ALL;
