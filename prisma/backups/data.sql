@@ -4,7 +4,7 @@ SET session_replication_role = replica;
 -- PostgreSQL database dump
 --
 
--- \restrict wrvSeHxMztNXqWIUYdMYMDrsnyHAEqjIqJm2I805EXJlgrOebBq87hilDjXqhRg
+-- \restrict kAe7ZftD7FwzpdYHTHrOnjGypNLG5wT2xYmRfxcYJe7wfNlebwPR4Bd0iLm9RYl
 
 -- Dumped from database version 15.8
 -- Dumped by pg_dump version 17.6
@@ -1518,9 +1518,9 @@ COPY "auth"."oauth_clients" ("id", "client_secret_hash", "registration_type", "r
 -- Data for Name: sessions; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-COPY "auth"."sessions" ("id", "user_id", "created_at", "updated_at", "factor_id", "aal", "not_after", "refreshed_at", "user_agent", "ip", "tag", "oauth_client_id") FROM stdin;
-6e711df7-4866-4712-8424-9d21c01c710b	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-10-12 09:12:45.681563+00	2025-10-28 06:00:34.110228+00	\N	aal1	\N	2025-10-28 06:00:34.107867	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15	31.94.12.107	\N	\N
-67e81fde-fb20-4aad-8771-bc307fa863e6	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-11-03 13:56:36.539013+00	2025-11-04 19:09:03.455519+00	\N	aal1	\N	2025-11-04 19:09:03.451939	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15	195.180.37.117	\N	\N
+COPY "auth"."sessions" ("id", "user_id", "created_at", "updated_at", "factor_id", "aal", "not_after", "refreshed_at", "user_agent", "ip", "tag", "oauth_client_id", "refresh_token_hmac_key", "refresh_token_counter") FROM stdin;
+6e711df7-4866-4712-8424-9d21c01c710b	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-10-12 09:12:45.681563+00	2025-10-28 06:00:34.110228+00	\N	aal1	\N	2025-10-28 06:00:34.107867	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15	31.94.12.107	\N	\N	\N	\N
+67e81fde-fb20-4aad-8771-bc307fa863e6	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-11-03 13:56:36.539013+00	2025-11-04 19:09:03.455519+00	\N	aal1	\N	2025-11-04 19:09:03.451939	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15	195.180.37.117	\N	\N	\N	\N
 \.
 
 
@@ -1538,7 +1538,7 @@ COPY "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "authent
 -- Data for Name: mfa_factors; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-COPY "auth"."mfa_factors" ("id", "user_id", "friendly_name", "factor_type", "status", "created_at", "updated_at", "secret", "phone", "last_challenged_at", "web_authn_credential", "web_authn_aaguid") FROM stdin;
+COPY "auth"."mfa_factors" ("id", "user_id", "friendly_name", "factor_type", "status", "created_at", "updated_at", "secret", "phone", "last_challenged_at", "web_authn_credential", "web_authn_aaguid", "last_webauthn_challenge_data") FROM stdin;
 \.
 
 
@@ -2459,6 +2459,6 @@ SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 716, true);
 -- PostgreSQL database dump complete
 --
 
--- \unrestrict wrvSeHxMztNXqWIUYdMYMDrsnyHAEqjIqJm2I805EXJlgrOebBq87hilDjXqhRg
+-- \unrestrict kAe7ZftD7FwzpdYHTHrOnjGypNLG5wT2xYmRfxcYJe7wfNlebwPR4Bd0iLm9RYl
 
 RESET ALL;
