@@ -4,7 +4,7 @@ SET session_replication_role = replica;
 -- PostgreSQL database dump
 --
 
--- \restrict wqM4ZeyfNW6177KoVesTG69NqXjBdTz6QXFpx92fJUVzKwEG5ipbRfBkzgSWNI1
+-- \restrict egEFMSdoLQfqUZbJ5XOAlbc6eXdLomdmzOQbKUWK2PSDLG8cqpnkBvOXMEwZWXZ
 
 -- Dumped from database version 15.8
 -- Dumped by pg_dump version 17.6
@@ -1604,6 +1604,35 @@ COPY "auth"."audit_log_entries" ("instance_id", "id", "payload", "created_at", "
 00000000-0000-0000-0000-000000000000	4f7ce548-52bf-434f-9e14-b581de130a4c	{"action":"user_confirmation_requested","actor_id":"2b610612-e780-45bb-9459-ec8c32493a21","actor_name":"Andy N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}	2026-01-04 18:13:05.732034+00	
 00000000-0000-0000-0000-000000000000	c9fe0d7e-00df-49e6-8046-eb3403738a2d	{"action":"user_deleted","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"user_email":"david@naylormail.co.uk","user_id":"2b610612-e780-45bb-9459-ec8c32493a21","user_phone":""}}	2026-01-04 18:20:20.967118+00	
 00000000-0000-0000-0000-000000000000	b4135023-31d4-4485-bb84-98fbf0e786a8	{"action":"user_confirmation_requested","actor_id":"290832cf-7f63-47f9-9af6-954b9db1c4d2","actor_name":"Andy N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}	2026-01-04 18:22:13.613809+00	
+00000000-0000-0000-0000-000000000000	8dd83de6-82b9-4ae7-a069-a36218cc684d	{"action":"user_deleted","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"user_email":"david@naylormail.co.uk","user_id":"290832cf-7f63-47f9-9af6-954b9db1c4d2","user_phone":""}}	2026-01-06 20:04:21.917123+00	
+00000000-0000-0000-0000-000000000000	fac75fc3-9556-4203-b13b-64012024a603	{"action":"user_confirmation_requested","actor_id":"8fcbc70b-d0ec-4af9-a8aa-5c0121950e9a","actor_name":"A N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}	2026-01-06 20:05:06.135062+00	
+00000000-0000-0000-0000-000000000000	7c3fdf3a-93ed-4f63-a70c-7718b5a76bf8	{"action":"user_deleted","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"user_email":"david@naylormail.co.uk","user_id":"8fcbc70b-d0ec-4af9-a8aa-5c0121950e9a","user_phone":""}}	2026-01-06 20:08:29.832239+00	
+00000000-0000-0000-0000-000000000000	697d2b7e-6386-4c1b-ac6e-76dfea2325bb	{"action":"user_confirmation_requested","actor_id":"ba63b797-350f-4b85-9ec6-8e51661d16ba","actor_name":"A N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}	2026-01-06 20:08:56.857183+00	
+00000000-0000-0000-0000-000000000000	dca41447-d4e9-452c-8241-ca5d38a56be3	{"action":"user_deleted","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"user_email":"david@naylormail.co.uk","user_id":"ba63b797-350f-4b85-9ec6-8e51661d16ba","user_phone":""}}	2026-01-06 20:10:55.850311+00	
+00000000-0000-0000-0000-000000000000	d764dd5d-f017-41d7-ac03-5308bcb8ef69	{"action":"user_confirmation_requested","actor_id":"c5d1832e-fe97-4ba2-9747-e47c172390c3","actor_name":"A N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}	2026-01-06 20:11:24.388419+00	
+00000000-0000-0000-0000-000000000000	62ea6ab1-7c41-4785-b43c-292789852444	{"action":"user_deleted","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"user_email":"david@naylormail.co.uk","user_id":"c5d1832e-fe97-4ba2-9747-e47c172390c3","user_phone":""}}	2026-01-06 20:16:38.459872+00	
+00000000-0000-0000-0000-000000000000	2e384726-9b75-429a-93d6-b64a23e07586	{"action":"user_confirmation_requested","actor_id":"0c201f0d-854f-47f4-a9c7-fa8b224bf29b","actor_name":"A N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}	2026-01-06 20:17:05.01912+00	
+00000000-0000-0000-0000-000000000000	57526e63-41fd-40a2-b69b-7b6c20c9f98b	{"action":"user_deleted","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"user_email":"david@naylormail.co.uk","user_id":"0c201f0d-854f-47f4-a9c7-fa8b224bf29b","user_phone":""}}	2026-01-06 20:18:25.010766+00	
+00000000-0000-0000-0000-000000000000	5699a9a3-3f1d-4e95-8130-f36dca8140c8	{"action":"user_confirmation_requested","actor_id":"2495dc0f-6ebd-4999-9cff-276f7685d436","actor_name":"A N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}	2026-01-06 20:19:04.530448+00	
+00000000-0000-0000-0000-000000000000	fa565a29-3d3e-46dc-a912-a10f225650e6	{"action":"user_deleted","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"user_email":"david@naylormail.co.uk","user_id":"2495dc0f-6ebd-4999-9cff-276f7685d436","user_phone":""}}	2026-01-06 20:20:58.581544+00	
+00000000-0000-0000-0000-000000000000	321995ef-870b-4d99-8c44-ab169836dd46	{"action":"user_confirmation_requested","actor_id":"bc832528-de0f-43bd-8623-a66f8e98ac56","actor_name":"A N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}	2026-01-06 20:21:47.300233+00	
+00000000-0000-0000-0000-000000000000	8f43ec0f-2dde-4df0-b7c6-8ae9c35a2dc4	{"action":"user_deleted","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"user_email":"david@naylormail.co.uk","user_id":"bc832528-de0f-43bd-8623-a66f8e98ac56","user_phone":""}}	2026-01-06 20:23:56.044141+00	
+00000000-0000-0000-0000-000000000000	5cf26928-4e1f-4769-8537-19affc214637	{"action":"user_confirmation_requested","actor_id":"3b3d2f78-8565-4acc-9a45-ae9530863c84","actor_name":"A N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}	2026-01-06 20:25:56.992653+00	
+00000000-0000-0000-0000-000000000000	96646576-6165-45bb-b94c-c034e452da7c	{"action":"user_deleted","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"user_email":"david@naylormail.co.uk","user_id":"3b3d2f78-8565-4acc-9a45-ae9530863c84","user_phone":""}}	2026-01-06 20:27:35.934657+00	
+00000000-0000-0000-0000-000000000000	04ea8ffe-e6f5-437f-9aad-170ee477b4f8	{"action":"user_confirmation_requested","actor_id":"99e87b4b-a7d5-44a6-9274-8962abaeb445","actor_name":"D N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}	2026-01-06 20:28:01.397526+00	
+00000000-0000-0000-0000-000000000000	4a1e9c03-ab16-41f8-92fc-33bf1048b7f6	{"action":"user_recovery_requested","actor_id":"99e87b4b-a7d5-44a6-9274-8962abaeb445","actor_name":"D N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"user"}	2026-01-06 20:40:32.816209+00	
+00000000-0000-0000-0000-000000000000	f71ef3a3-d02f-4bfc-8f97-b5ef42bf4b37	{"action":"user_signedup","actor_id":"99e87b4b-a7d5-44a6-9274-8962abaeb445","actor_name":"D N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"team","traits":{"provider":"email"}}	2026-01-06 20:41:04.769555+00	
+00000000-0000-0000-0000-000000000000	bf18ec58-91f3-400f-a90f-03a2ff588c88	{"action":"user_recovery_requested","actor_id":"99e87b4b-a7d5-44a6-9274-8962abaeb445","actor_name":"D N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"user"}	2026-01-06 20:46:56.664405+00	
+00000000-0000-0000-0000-000000000000	90f57e77-0b44-4d15-be9a-fb9aea74f200	{"action":"login","actor_id":"99e87b4b-a7d5-44a6-9274-8962abaeb445","actor_name":"D N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"account"}	2026-01-06 20:47:08.971256+00	
+00000000-0000-0000-0000-000000000000	12fdcd81-5de3-459f-b01e-11267b3fd4f4	{"action":"user_updated_password","actor_id":"99e87b4b-a7d5-44a6-9274-8962abaeb445","actor_name":"D N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"user"}	2026-01-06 20:47:40.525774+00	
+00000000-0000-0000-0000-000000000000	c7e0bd93-1851-4684-b39c-5c7987c8a162	{"action":"user_modified","actor_id":"99e87b4b-a7d5-44a6-9274-8962abaeb445","actor_name":"D N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"user"}	2026-01-06 20:47:40.530377+00	
+00000000-0000-0000-0000-000000000000	c95b032e-8247-429c-b5d1-ca5da91c8cc9	{"action":"logout","actor_id":"99e87b4b-a7d5-44a6-9274-8962abaeb445","actor_name":"D N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"account"}	2026-01-06 20:47:50.184989+00	
+00000000-0000-0000-0000-000000000000	fe0e4fdd-5cd0-493e-8a29-93cd73a96696	{"action":"login","actor_id":"99e87b4b-a7d5-44a6-9274-8962abaeb445","actor_name":"D N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}	2026-01-06 20:48:00.833002+00	
+00000000-0000-0000-0000-000000000000	ac725c52-26f5-42c2-9143-85063c83aa40	{"action":"logout","actor_id":"99e87b4b-a7d5-44a6-9274-8962abaeb445","actor_name":"D N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"account"}	2026-01-06 20:50:57.571708+00	
+00000000-0000-0000-0000-000000000000	ccbb9b3e-0551-4f94-9950-386a79beb820	{"action":"login","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}	2026-01-06 20:51:14.127296+00	
+00000000-0000-0000-0000-000000000000	0e12866f-65f2-46d5-a7fb-85c777bc3d22	{"action":"user_recovery_requested","actor_id":"99e87b4b-a7d5-44a6-9274-8962abaeb445","actor_name":"D N","actor_username":"david@naylormail.co.uk","actor_via_sso":false,"log_type":"user"}	2026-01-06 20:51:48.453678+00	
+00000000-0000-0000-0000-000000000000	8d83fd59-836f-4703-9aa9-02cc4adf66ac	{"action":"token_refreshed","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2026-01-06 21:52:43.440548+00	
+00000000-0000-0000-0000-000000000000	196ee6e9-7360-4077-b1bc-fd497a0ff042	{"action":"token_revoked","actor_id":"89a501d9-e11e-4215-8c0c-1b071badf9ec","actor_name":"David Naylor","actor_username":"djnaylor97@gmail.com","actor_via_sso":false,"log_type":"token"}	2026-01-06 21:52:43.484466+00	
 \.
 
 
@@ -1621,10 +1650,10 @@ COPY "auth"."flow_state" ("id", "user_id", "auth_code", "code_challenge_method",
 
 COPY "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous", "company", "profession", "country", "city") FROM stdin;
 00000000-0000-0000-0000-000000000000	b8c2ca65-ad45-4310-af57-49368e91d3bb	authenticated	authenticated	david_naylor@icloud.com	$2a$10$tWaW93e0SImQQFDGOPw6E.80EvSYa5nbV8BJ.MlFfCiAFZ3HzhU5W	2025-04-09 07:35:33.594117+00	\N		\N		\N			\N	2025-04-09 07:35:33.599907+00	{"provider": "email", "providers": ["email"]}	{"sub": "b8c2ca65-ad45-4310-af57-49368e91d3bb", "email": "david_naylor@icloud.com", "full_name": "David N", "email_verified": true, "phone_verified": false}	f	2025-04-09 07:35:33.536089+00	2025-04-09 07:35:33.628671+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
-00000000-0000-0000-0000-000000000000	89a501d9-e11e-4215-8c0c-1b071badf9ec	authenticated	authenticated	djnaylor97@gmail.com	$2a$06$rMH7VZJ5cNmVdVxFuxsw9OU2UIe.BdVNDFjoWJVt0.Qr9jPrI7fqi	2025-04-09 05:50:08.723654+00	\N		\N		\N			\N	2025-11-03 13:56:36.537878+00	{"provider": "email", "providers": ["email"]}	{"city": "Cambridgeshire", "company": "WSP", "country": "United Kingdom", "full_name": "David Naylor", "last_name": "Naylor", "first_name": "David", "profession": "Mechanical", "avatar_emoji": "👨‍💻", "email_verified": true}	t	2025-04-09 05:50:08.66869+00	2026-01-04 13:56:13.890434+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
+00000000-0000-0000-0000-000000000000	89a501d9-e11e-4215-8c0c-1b071badf9ec	authenticated	authenticated	djnaylor97@gmail.com	$2a$06$rMH7VZJ5cNmVdVxFuxsw9OU2UIe.BdVNDFjoWJVt0.Qr9jPrI7fqi	2025-04-09 05:50:08.723654+00	\N		\N		\N			\N	2026-01-06 20:51:14.127909+00	{"provider": "email", "providers": ["email"]}	{"city": "Cambridgeshire", "company": "WSP", "country": "United Kingdom", "full_name": "David Naylor", "last_name": "Naylor", "first_name": "David", "profession": "Mechanical", "avatar_emoji": "👨‍💻", "email_verified": true}	t	2025-04-09 05:50:08.66869+00	2026-01-06 21:52:43.551583+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
 00000000-0000-0000-0000-000000000000	f4f2721b-d4bb-4c6b-bdab-da64efdce650	authenticated	authenticated	djn1@live.co.uk	$2a$10$WU2uONH/ozzsgRapeVNbJOzay6G8.jfQR6.xnOo/s4D1gr.4rscey	2026-01-04 14:04:16.92885+00	\N		2026-01-04 14:01:33.659565+00	e7ecec3108e5350f39fb22e4c71bb240be33f3c9a7a6ef31b9759811	2026-01-04 14:14:59.046816+00			\N	2026-01-04 14:04:16.961075+00	{"provider": "email", "providers": ["email"]}	{"sub": "f4f2721b-d4bb-4c6b-bdab-da64efdce650", "city": "Bradford", "email": "djn1@live.co.uk", "company": "aecom", "country": "United Kingdom", "full_name": "Olivia Moon", "last_name": "Moon", "first_name": "Olivia", "profession": "Science", "email_verified": true, "phone_verified": false}	\N	2026-01-04 14:01:30.171204+00	2026-01-04 14:14:59.744151+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
 00000000-0000-0000-0000-000000000000	bc7b3d31-990b-4f1e-975d-f2bf9605f160	authenticated	authenticated	john@gmail.com	$2a$10$hPEmhja05wbjeDHDbMCLMeYxyiwTnSkD0P1HfpBaqTzJnNzJbt.h.	2025-04-10 05:23:48.698628+00	\N		\N		\N			\N	2026-01-04 17:43:59.043851+00	{"provider": "email", "providers": ["email"]}	{"sub": "bc7b3d31-990b-4f1e-975d-f2bf9605f160", "city": "Cambridge", "email": "john@gmail.com", "company": "Mott MacDonald", "country": "United Kingdom", "full_name": "John Naylor", "last_name": "Naylor", "first_name": "John", "profession": "Electrical Engineer", "avatar_emoji": "🐸", "email_verified": true, "phone_verified": false}	f	2025-04-10 05:23:48.649145+00	2026-01-04 17:43:59.046641+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
-00000000-0000-0000-0000-000000000000	290832cf-7f63-47f9-9af6-954b9db1c4d2	authenticated	authenticated	david@naylormail.co.uk	$2a$10$CTPGc5v5xt8p3wNzeD92wOP5ywSaLi2Bqs2vyI.bXYtf88QKr02Pa	\N	\N	13d460855eaaccb896ef173b7fac7a79e5b3b836e428e28c9a5283a8	2026-01-04 18:22:14.805709+00		\N			\N	\N	{"provider": "email", "providers": ["email"]}	{"sub": "290832cf-7f63-47f9-9af6-954b9db1c4d2", "city": "Bedford", "email": "david@naylormail.co.uk", "company": "ABC", "country": "United Kingdom", "full_name": "Andy N", "last_name": "N", "first_name": "Andy", "profession": "M", "email_verified": false, "phone_verified": false}	\N	2026-01-04 18:22:13.606344+00	2026-01-04 18:22:14.807906+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
+00000000-0000-0000-0000-000000000000	99e87b4b-a7d5-44a6-9274-8962abaeb445	authenticated	authenticated	david@naylormail.co.uk	$2a$10$xOApa7YCKQxutrxGhkEtJOKV/ZnTflk9yDugMeZM0aSRDvm64kI5W	2026-01-06 20:41:04.772166+00	\N		\N	9690782f02a5ddc704132f3bea1a8b392f017bd6cfd816ac31103a17	2026-01-06 20:51:48.453379+00			\N	2026-01-06 20:48:00.83561+00	{"provider": "email", "providers": ["email"]}	{"sub": "99e87b4b-a7d5-44a6-9274-8962abaeb445", "city": "London", "email": "david@naylormail.co.uk", "company": "q", "country": "United Kingdom", "full_name": "D N", "last_name": "N", "first_name": "D", "profession": "q", "email_verified": true, "phone_verified": false}	\N	2026-01-06 20:28:01.386703+00	2026-01-06 20:51:48.454628+00	\N	\N			\N		0	\N		\N	f	\N	f	\N	\N	\N	\N
 \.
 
 
@@ -1637,7 +1666,7 @@ COPY "auth"."identities" ("provider_id", "user_id", "identity_data", "provider",
 b8c2ca65-ad45-4310-af57-49368e91d3bb	b8c2ca65-ad45-4310-af57-49368e91d3bb	{"sub": "b8c2ca65-ad45-4310-af57-49368e91d3bb", "email": "david_naylor@icloud.com", "full_name": "David N", "email_verified": false, "phone_verified": false}	email	2025-04-09 07:35:33.577581+00	2025-04-09 07:35:33.577636+00	2025-04-09 07:35:33.577636+00	29ed9cf2-6350-4e19-b937-2a297c0bb2cb
 bc7b3d31-990b-4f1e-975d-f2bf9605f160	bc7b3d31-990b-4f1e-975d-f2bf9605f160	{"sub": "bc7b3d31-990b-4f1e-975d-f2bf9605f160", "email": "john@gmail.com", "full_name": "John N", "email_verified": false, "phone_verified": false}	email	2025-04-10 05:23:48.690655+00	2025-04-10 05:23:48.690719+00	2025-04-10 05:23:48.690719+00	0dd21427-b4a0-4a2a-8ebd-9887a532a949
 f4f2721b-d4bb-4c6b-bdab-da64efdce650	f4f2721b-d4bb-4c6b-bdab-da64efdce650	{"sub": "f4f2721b-d4bb-4c6b-bdab-da64efdce650", "city": "Bradford", "email": "djn1@live.co.uk", "company": "aecom", "country": "United Kingdom", "full_name": "Olivia Moon", "last_name": "Moon", "first_name": "Olivia", "profession": "Science", "email_verified": true, "phone_verified": false}	email	2026-01-04 14:01:30.207734+00	2026-01-04 14:01:30.2078+00	2026-01-04 14:01:30.2078+00	79cf9c74-d119-4f96-b6ed-0e706854ac96
-290832cf-7f63-47f9-9af6-954b9db1c4d2	290832cf-7f63-47f9-9af6-954b9db1c4d2	{"sub": "290832cf-7f63-47f9-9af6-954b9db1c4d2", "city": "Bedford", "email": "david@naylormail.co.uk", "company": "ABC", "country": "United Kingdom", "full_name": "Andy N", "last_name": "N", "first_name": "Andy", "profession": "M", "email_verified": false, "phone_verified": false}	email	2026-01-04 18:22:13.609895+00	2026-01-04 18:22:13.609949+00	2026-01-04 18:22:13.609949+00	77c19a85-4ec6-47ef-9e55-1228716a9e34
+99e87b4b-a7d5-44a6-9274-8962abaeb445	99e87b4b-a7d5-44a6-9274-8962abaeb445	{"sub": "99e87b4b-a7d5-44a6-9274-8962abaeb445", "city": "London", "email": "david@naylormail.co.uk", "company": "q", "country": "United Kingdom", "full_name": "D N", "last_name": "N", "first_name": "D", "profession": "q", "email_verified": false, "phone_verified": false}	email	2026-01-06 20:28:01.391258+00	2026-01-06 20:28:01.391308+00	2026-01-06 20:28:01.391308+00	22a1e71b-009b-4938-853f-f17d36d9a7bc
 \.
 
 
@@ -1663,6 +1692,7 @@ COPY "auth"."oauth_clients" ("id", "client_secret_hash", "registration_type", "r
 
 COPY "auth"."sessions" ("id", "user_id", "created_at", "updated_at", "factor_id", "aal", "not_after", "refreshed_at", "user_agent", "ip", "tag", "oauth_client_id", "refresh_token_hmac_key", "refresh_token_counter", "scopes") FROM stdin;
 b7ea3e2d-c49a-4ee8-bddb-c4ddebb067f1	f4f2721b-d4bb-4c6b-bdab-da64efdce650	2026-01-04 14:04:16.963416+00	2026-01-04 14:04:16.963416+00	\N	aal1	\N	\N	Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Mobile/15E148 Safari/604.1	85.190.234.177	\N	\N	\N	\N	\N
+71b984e2-8293-4ff0-b209-a8f9698d5579	89a501d9-e11e-4215-8c0c-1b071badf9ec	2026-01-06 20:51:14.128047+00	2026-01-06 21:52:43.576926+00	\N	aal1	\N	2026-01-06 21:52:43.573436	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15	195.180.36.220	\N	\N	\N	\N	\N
 \.
 
 
@@ -1672,6 +1702,7 @@ b7ea3e2d-c49a-4ee8-bddb-c4ddebb067f1	f4f2721b-d4bb-4c6b-bdab-da64efdce650	2026-0
 
 COPY "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "authentication_method", "id") FROM stdin;
 b7ea3e2d-c49a-4ee8-bddb-c4ddebb067f1	2026-01-04 14:04:16.98962+00	2026-01-04 14:04:16.98962+00	otp	07d1b6c1-5092-4ea8-973f-b822065829f8
+71b984e2-8293-4ff0-b209-a8f9698d5579	2026-01-06 20:51:14.130661+00	2026-01-06 20:51:14.130661+00	password	8ced5aa0-4f38-4318-b1a8-e536e2ec4efa
 \.
 
 
@@ -1720,8 +1751,8 @@ COPY "auth"."oauth_consents" ("id", "user_id", "client_id", "scopes", "granted_a
 --
 
 COPY "auth"."one_time_tokens" ("id", "user_id", "token_type", "token_hash", "relates_to", "created_at", "updated_at") FROM stdin;
+a4b303a9-013c-4ac6-b3b5-5ee29e84da67	99e87b4b-a7d5-44a6-9274-8962abaeb445	recovery_token	9690782f02a5ddc704132f3bea1a8b392f017bd6cfd816ac31103a17	david@naylormail.co.uk	2026-01-06 20:51:48.459893	2026-01-06 20:51:48.459893
 f0141082-3818-4839-84e0-c2428ee55fbc	f4f2721b-d4bb-4c6b-bdab-da64efdce650	recovery_token	e7ecec3108e5350f39fb22e4c71bb240be33f3c9a7a6ef31b9759811	djn1@live.co.uk	2026-01-04 14:14:59.782017	2026-01-04 14:14:59.782017
-ad0ea917-37fb-460b-844c-d691496a8e9a	290832cf-7f63-47f9-9af6-954b9db1c4d2	confirmation_token	13d460855eaaccb896ef173b7fac7a79e5b3b836e428e28c9a5283a8	david@naylormail.co.uk	2026-01-04 18:22:14.808571	2026-01-04 18:22:14.808571
 \.
 
 
@@ -1731,6 +1762,8 @@ ad0ea917-37fb-460b-844c-d691496a8e9a	290832cf-7f63-47f9-9af6-954b9db1c4d2	confir
 
 COPY "auth"."refresh_tokens" ("instance_id", "id", "token", "user_id", "revoked", "created_at", "updated_at", "parent", "session_id") FROM stdin;
 00000000-0000-0000-0000-000000000000	759	5wbs6pjbiw4k	f4f2721b-d4bb-4c6b-bdab-da64efdce650	f	2026-01-04 14:04:16.979499+00	2026-01-04 14:04:16.979499+00	\N	b7ea3e2d-c49a-4ee8-bddb-c4ddebb067f1
+00000000-0000-0000-0000-000000000000	779	4sp63xsi4quw	89a501d9-e11e-4215-8c0c-1b071badf9ec	t	2026-01-06 20:51:14.129103+00	2026-01-06 21:52:43.495211+00	\N	71b984e2-8293-4ff0-b209-a8f9698d5579
+00000000-0000-0000-0000-000000000000	780	6sy72vww3b26	89a501d9-e11e-4215-8c0c-1b071badf9ec	f	2026-01-06 21:52:43.53033+00	2026-01-06 21:52:43.53033+00	4sp63xsi4quw	71b984e2-8293-4ff0-b209-a8f9698d5579
 \.
 
 
@@ -2128,6 +2161,7 @@ fb01413f-8938-4227-b0fd-3ad7626ceb92	Project 1	This is a good project	bc7b3d31-9
 6b392402-f448-45dd-9efc-73fcd8d070cc	Dad look in this project	this one has some results to look at	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-06-19 10:10:48.246533+00	2025-07-14 11:44:28.671883+00	12341	client	2025-06-20	2025-07-19	t
 e500c71e-4008-4d14-a085-5309f5619275	Test project 000		bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-06-19 11:58:18.193586+00	2025-09-08 12:43:24.045964+00	333	dd	2025-06-04	2025-06-08	f
 ba6fa055-d549-4506-9973-6937946d07a9	Admin projects	Admin description	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-08-11 07:16:54.750135+00	2025-11-07 18:38:43.696488+00	1123456	Admin client	2025-08-12	2025-11-29	t
+0f5b9f4f-659d-4db8-a82c-12f9d94d50b7	d	\N	99e87b4b-a7d5-44a6-9274-8962abaeb445	2026-01-06 20:48:38.86162+00	2026-01-06 20:48:38.86162+00	12	d	2026-01-15	2026-01-29	f
 \.
 
 
@@ -2150,6 +2184,7 @@ d6e6cd7c-f002-4a85-9836-ff177f818fa8	Equipment Schedules	8e0c14ba-dad0-4580-97d4
 c9f83910-c1c3-41cc-900f-b1dc91a6e5dd	in this folder	6b392402-f448-45dd-9efc-73fcd8d070cc	\N	2025-06-19 10:11:08.222665+00	2025-07-01 11:02:36.199859+00
 9696129f-9ba6-4ccb-8826-c8d467e0c25e	Admin folder	ba6fa055-d549-4506-9973-6937946d07a9	\N	2025-08-11 07:18:15.703326+00	2025-08-11 07:18:15.703326+00
 5f8a6934-43bd-44e5-b4f5-ecb7a413af5c	Commissioninggggg	8e0c14ba-dad0-4580-97d4-505591e434b6	\N	2025-06-19 10:07:47.891136+00	2025-09-08 12:43:46.03667+00
+d4204936-c179-470b-adb0-1e9b5641370d	folder 1	0f5b9f4f-659d-4db8-a82c-12f9d94d50b7	\N	2026-01-06 20:48:38.963574+00	2026-01-06 20:48:38.963574+00
 \.
 
 
@@ -2376,6 +2411,8 @@ eb071582-eaf0-40a5-9823-899a2b0d12c0	ityyr	ba6fa055-d549-4506-9973-6937946d07a9	
 27157aea-7ee0-40d5-bfd5-b34380a3be67	12222	ba6fa055-d549-4506-9973-6937946d07a9	9696129f-9ba6-4ccb-8826-c8d467e0c25e	89a501d9-e11e-4215-8c0c-1b071badf9ec	{"air_density": 1.2, "diameter_mm": 200, "air_velocity": 1}	{"pressure_loss": 0.06}	2025-11-07 18:19:45.619371+00	afb10aa6-9540-4b17-a506-d389d2b8be6a	{"air_density": "kg/m³", "diameter_mm": "mm", "air_velocity": "m/s"}	{"pressure_loss": 0.06}	{"pressure_loss": "Pa/m"}
 948b7e12-cd19-465e-9195-40b19504c600	hgfd	ba6fa055-d549-4506-9973-6937946d07a9	9696129f-9ba6-4ccb-8826-c8d467e0c25e	89a501d9-e11e-4215-8c0c-1b071badf9ec	{"absolute_pressure": 12345}	{"gauge_pressure": 12344}	2025-11-07 18:23:51.863514+00	afd0007c-6411-4402-9f4d-a4e7f6e9b3da	{"absolute_pressure": "bar"}	{"gauge_pressure": 1234400000}	{"gauge_pressure": "bar"}
 b83c1027-0df5-4d2d-bad2-e9727ce0d39c	\N	ba6fa055-d549-4506-9973-6937946d07a9	9696129f-9ba6-4ccb-8826-c8d467e0c25e	89a501d9-e11e-4215-8c0c-1b071badf9ec	{"air_density": 1.2, "diameter_mm": 200, "air_velocity": 2}	{"pressure_loss": 0.24}	2026-01-03 11:53:36.879733+00	afb10aa6-9540-4b17-a506-d389d2b8be6a	{"air_density": "kg/m³", "diameter_mm": "mm", "air_velocity": "m/s"}	{"pressure_loss": 0.24}	{"pressure_loss": "Pa/m"}
+0939c606-cc44-4c6a-8ef0-1fcb6dc209c4	\N	ba6fa055-d549-4506-9973-6937946d07a9	9696129f-9ba6-4ccb-8826-c8d467e0c25e	89a501d9-e11e-4215-8c0c-1b071badf9ec	{"air_density": 1.2, "diameter_mm": 200, "air_velocity": 2}	{"pressure_loss": 0.24}	2026-01-06 22:03:35.628749+00	afb10aa6-9540-4b17-a506-d389d2b8be6a	{"air_density": "kg/m³", "diameter_mm": "mm", "air_velocity": "m/s"}	{"pressure_loss": 0.24}	{"pressure_loss": "Pa/m"}
+d511bfb0-248f-4d94-a536-dafbf4b66dba	y	ba6fa055-d549-4506-9973-6937946d07a9	9696129f-9ba6-4ccb-8826-c8d467e0c25e	89a501d9-e11e-4215-8c0c-1b071badf9ec	{"air_density": 1.2, "diameter_mm": 200, "air_velocity": 2}	{"pressure_loss": 0.24}	2026-01-06 22:38:41.703965+00	afb10aa6-9540-4b17-a506-d389d2b8be6a	{"air_density": "kg/m³", "diameter_mm": "mm", "air_velocity": "m/s"}	{"pressure_loss": 0.24}	{"pressure_loss": "Pa/m"}
 \.
 
 
@@ -2431,10 +2468,10 @@ COPY "public"."user_calculation_limits" ("id", "user_id", "month_year", "calcula
 2249fcb9-3c20-4588-8dba-106a65e3db8d	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-08	7	100	2025-08-12 05:24:10.625787+00	2025-08-26 16:05:42.125262+00
 3d6bb90e-c5b1-43cc-b36c-6a84f40368fe	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-09	36	100	2025-09-08 12:21:37.291326+00	2025-09-29 12:57:12.04321+00
 b117b163-d0b0-49a9-ae65-4bb98cfed8ea	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-11	38	100	2025-11-04 17:00:40.041102+00	2025-11-23 18:09:49.307123+00
-aad6591a-88bb-41bd-8358-332e283d2b04	89a501d9-e11e-4215-8c0c-1b071badf9ec	2026-01	2	100	2026-01-03 11:09:22.968924+00	2026-01-03 11:53:16.035365+00
 37c0fc2a-8f62-4d5c-9f1e-db1357d0dbf3	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-08	31	100	2025-08-12 04:48:42.90199+00	2025-08-30 04:22:02.363237+00
 7d8eb94f-2c3e-4743-b422-8233b21d22e1	89a501d9-e11e-4215-8c0c-1b071badf9ec	2025-10	72	100	2025-10-12 03:56:32.34885+00	2025-10-27 08:28:17.278801+00
 149ab1bf-074e-48b8-8b53-eb647b9a795d	bc7b3d31-990b-4f1e-975d-f2bf9605f160	2025-11	3	100	2025-11-03 13:50:26.58739+00	2025-11-03 13:54:21.946431+00
+aad6591a-88bb-41bd-8358-332e283d2b04	89a501d9-e11e-4215-8c0c-1b071badf9ec	2026-01	10	100	2026-01-03 11:09:22.968924+00	2026-01-06 22:38:43.521913+00
 \.
 
 
@@ -2506,13 +2543,13 @@ COPY "storage"."vector_indexes" ("id", "name", "bucket_id", "data_type", "dimens
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: supabase_auth_admin
 --
 
-SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 775, true);
+SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 780, true);
 
 
 --
 -- PostgreSQL database dump complete
 --
 
--- \unrestrict wqM4ZeyfNW6177KoVesTG69NqXjBdTz6QXFpx92fJUVzKwEG5ipbRfBkzgSWNI1
+-- \unrestrict egEFMSdoLQfqUZbJ5XOAlbc6eXdLomdmzOQbKUWK2PSDLG8cqpnkBvOXMEwZWXZ
 
 RESET ALL;
