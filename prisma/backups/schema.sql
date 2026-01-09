@@ -1670,11 +1670,21 @@ CREATE TABLE IF NOT EXISTS "public"."calculation_flows" (
     "user_id" "uuid" NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "folder_id" "uuid"
+    "folder_id" "uuid",
+    "scenarios" "jsonb" DEFAULT '[]'::"jsonb",
+    "column_visibility" "jsonb" DEFAULT '{}'::"jsonb"
 );
 
 
 ALTER TABLE "public"."calculation_flows" OWNER TO "postgres";
+
+
+COMMENT ON COLUMN "public"."calculation_flows"."scenarios" IS 'Array of flow scenarios, each containing input values and results for spreadsheet view';
+
+
+
+COMMENT ON COLUMN "public"."calculation_flows"."column_visibility" IS 'Map of column IDs to visibility boolean for spreadsheet view column management';
+
 
 
 CREATE TABLE IF NOT EXISTS "public"."calculation_metadata" (
