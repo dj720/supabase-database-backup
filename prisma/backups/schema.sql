@@ -1672,7 +1672,8 @@ CREATE TABLE IF NOT EXISTS "public"."calculation_flows" (
     "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "folder_id" "uuid",
     "scenarios" "jsonb" DEFAULT '[]'::"jsonb",
-    "column_visibility" "jsonb" DEFAULT '{}'::"jsonb"
+    "column_visibility" "jsonb" DEFAULT '{}'::"jsonb",
+    "column_totals" "jsonb" DEFAULT '{}'::"jsonb"
 );
 
 
@@ -1684,6 +1685,10 @@ COMMENT ON COLUMN "public"."calculation_flows"."scenarios" IS 'Array of flow sce
 
 
 COMMENT ON COLUMN "public"."calculation_flows"."column_visibility" IS 'Map of column IDs to visibility boolean for spreadsheet view column management';
+
+
+
+COMMENT ON COLUMN "public"."calculation_flows"."column_totals" IS 'Map of column IDs to totals boolean for spreadsheet view column totals display';
 
 
 
@@ -2404,7 +2409,11 @@ CREATE POLICY "Admins can view all calculation flows" ON "public"."calculation_f
 
 
 
-CREATE POLICY "Admins can view all calculation results" ON "public"."calculation_results" FOR SELECT USING ("public"."is_admin"("auth"."uid"()));
+CREATE POLICY "Admins can view all calculation results" ON "public"."calculation_results" FOR SELECT USING ("public"."is_super_admin"());
+
+
+
+COMMENT ON POLICY "Admins can view all calculation results" ON "public"."calculation_results" IS 'Super admins can view all calculation results for monitoring and administration.';
 
 
 
@@ -2552,6 +2561,14 @@ CREATE POLICY "Users can delete folders in their projects" ON "public"."folders"
 
 
 
+CREATE POLICY "Users can delete own calculation results" ON "public"."calculation_results" FOR DELETE USING (("auth"."uid"() = "user_id"));
+
+
+
+COMMENT ON POLICY "Users can delete own calculation results" ON "public"."calculation_results" IS 'Users can only delete their own calculation results. Enforced by RLS.';
+
+
+
 CREATE POLICY "Users can delete their own calculation favorites" ON "public"."user_calculation_favorites" FOR DELETE USING (("auth"."uid"() = "user_id"));
 
 
@@ -2572,6 +2589,14 @@ CREATE POLICY "Users can delete their own projects" ON "public"."projects" FOR D
 
 
 
+CREATE POLICY "Users can insert own calculation results" ON "public"."calculation_results" FOR INSERT WITH CHECK (("auth"."uid"() = "user_id"));
+
+
+
+COMMENT ON POLICY "Users can insert own calculation results" ON "public"."calculation_results" IS 'Users can only insert calculation results for themselves. Prevents IDOR vulnerability.';
+
+
+
 CREATE POLICY "Users can insert own feedback" ON "public"."feedback" FOR INSERT WITH CHECK (("auth"."uid"() = "user_id"));
 
 
@@ -2587,6 +2612,14 @@ CREATE POLICY "Users can update constraints for their projects" ON "public"."pro
 CREATE POLICY "Users can update folders in their projects" ON "public"."folders" FOR UPDATE USING ((EXISTS ( SELECT 1
    FROM "public"."projects"
   WHERE (("projects"."id" = "folders"."project_id") AND ("projects"."user_id" = "auth"."uid"())))));
+
+
+
+CREATE POLICY "Users can update own calculation results" ON "public"."calculation_results" FOR UPDATE USING (("auth"."uid"() = "user_id")) WITH CHECK (("auth"."uid"() = "user_id"));
+
+
+
+COMMENT ON POLICY "Users can update own calculation results" ON "public"."calculation_results" IS 'Users can only update their own calculation results. Enforced by RLS.';
 
 
 
@@ -2631,6 +2664,14 @@ CREATE POLICY "Users can view folders in their projects" ON "public"."folders" F
 CREATE POLICY "Users can view folders of their projects" ON "public"."folders" FOR SELECT USING ((EXISTS ( SELECT 1
    FROM "public"."projects"
   WHERE (("projects"."id" = "folders"."project_id") AND ("projects"."user_id" = "auth"."uid"())))));
+
+
+
+CREATE POLICY "Users can view own calculation results" ON "public"."calculation_results" FOR SELECT USING (("auth"."uid"() = "user_id"));
+
+
+
+COMMENT ON POLICY "Users can view own calculation results" ON "public"."calculation_results" IS 'Users can only view their own calculation results. Enforced by RLS.';
 
 
 
