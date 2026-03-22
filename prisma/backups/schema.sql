@@ -1813,15 +1813,14 @@ CREATE TABLE IF NOT EXISTS "public"."feedback" (
     "user_id" "uuid",
     "category" "text" NOT NULL,
     "title" "text" NOT NULL,
-    "description" "text" NOT NULL,
-    "priority" "text" NOT NULL,
-    "email" "text",
+    "description" "text",
     "status" "text" DEFAULT 'open'::"text",
     "admin_notes" "text",
     "created_at" timestamp with time zone DEFAULT "now"(),
     "updated_at" timestamp with time zone DEFAULT "now"(),
-    CONSTRAINT "feedback_category_check" CHECK (("category" = ANY (ARRAY['bug'::"text", 'suggestion'::"text", 'calculation'::"text"]))),
-    CONSTRAINT "feedback_priority_check" CHECK (("priority" = ANY (ARRAY['low'::"text", 'medium'::"text", 'high'::"text"]))),
+    "rating" integer,
+    CONSTRAINT "feedback_category_check" CHECK (("category" = ANY (ARRAY['bug'::"text", 'suggestion'::"text", 'calculation'::"text", 'rating'::"text"]))),
+    CONSTRAINT "feedback_rating_check" CHECK ((("rating" IS NULL) OR (("rating" >= 1) AND ("rating" <= 5)))),
     CONSTRAINT "feedback_status_check" CHECK (("status" = ANY (ARRAY['open'::"text", 'in_progress'::"text", 'resolved'::"text", 'closed'::"text"])))
 );
 
