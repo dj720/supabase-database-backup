@@ -1875,11 +1875,16 @@ CREATE TABLE IF NOT EXISTS "public"."projects" (
     "client" "text",
     "start_date" "date",
     "end_date" "date",
-    "is_favorite" boolean DEFAULT false NOT NULL
+    "is_favorite" boolean DEFAULT false NOT NULL,
+    "project_inputs" "jsonb" DEFAULT '[]'::"jsonb" NOT NULL
 );
 
 
 ALTER TABLE "public"."projects" OWNER TO "postgres";
+
+
+COMMENT ON COLUMN "public"."projects"."project_inputs" IS 'JSON array of ProjectInput objects: id, label, kind (parameter|limit_max|limit_min), dimension, unit (from app unit map), value, optional notes/applies_to.';
+
 
 
 CREATE TABLE IF NOT EXISTS "public"."user_calculation_favorites" (
