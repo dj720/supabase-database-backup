@@ -1666,7 +1666,8 @@ CREATE TABLE IF NOT EXISTS "public"."calculation_flows" (
     "folder_id" "uuid",
     "scenarios" "jsonb" DEFAULT '[]'::"jsonb",
     "column_visibility" "jsonb" DEFAULT '{}'::"jsonb",
-    "column_totals" "jsonb" DEFAULT '{}'::"jsonb"
+    "column_totals" "jsonb" DEFAULT '{}'::"jsonb",
+    "output_limit_checks" "jsonb" DEFAULT '[]'::"jsonb" NOT NULL
 );
 
 
@@ -1682,6 +1683,10 @@ COMMENT ON COLUMN "public"."calculation_flows"."column_visibility" IS 'Map of co
 
 
 COMMENT ON COLUMN "public"."calculation_flows"."column_totals" IS 'Map of column IDs to totals boolean for spreadsheet view column totals display';
+
+
+
+COMMENT ON COLUMN "public"."calculation_flows"."output_limit_checks" IS 'Array of OutputLimitCheck: id, project_input_id, node_id, output_id.';
 
 
 
