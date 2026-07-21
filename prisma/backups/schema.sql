@@ -2607,6 +2607,10 @@ CREATE POLICY "Users can insert their own calculation favorites" ON "public"."us
 
 
 
+CREATE POLICY "Users can select own rows" ON "public"."user_calculation_limits" FOR SELECT USING (("auth"."uid"() = "user_id"));
+
+
+
 CREATE POLICY "Users can update constraints for their projects" ON "public"."project_constraints" FOR UPDATE USING (("auth"."uid"() = "user_id"));
 
 
@@ -2626,10 +2630,6 @@ COMMENT ON POLICY "Users can update own calculation results" ON "public"."calcul
 
 
 CREATE POLICY "Users can update own open feedback" ON "public"."feedback" FOR UPDATE USING ((("auth"."uid"() = "user_id") AND ("status" = 'open'::"text")));
-
-
-
-CREATE POLICY "Users can update own rows" ON "public"."user_calculation_limits" FOR UPDATE USING (("auth"."uid"() = "user_id"));
 
 
 
