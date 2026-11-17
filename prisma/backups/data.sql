@@ -4,10 +4,10 @@ SET session_replication_role = replica;
 -- PostgreSQL database dump
 --
 
--- \restrict MFsT5PeujN78J27fuWtCUVfsWJGiakiePZuThTtahjcJGqELKgT6VJ1WiRO5GKq
+-- \restrict FXahiPboryIGpmxydMyu1OVH9BXf9xpWXLi45vWUgYQdZplZrEdtPHBg45diFMt
 
 -- Dumped from database version 15.8
--- Dumped by pg_dump version 17.11
+-- Dumped by pg_dump version 17.12
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -2081,8 +2081,8 @@ COPY "auth"."oauth_consents" ("id", "user_id", "client_id", "scopes", "granted_a
 -- Data for Name: one_time_tokens; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-COPY "auth"."one_time_tokens" ("id", "user_id", "token_type", "token_hash", "relates_to", "created_at", "updated_at", "expires_at") FROM stdin;
-f0141082-3818-4839-84e0-c2428ee55fbc	f4f2721b-d4bb-4c6b-bdab-da64efdce650	recovery_token	e7ecec3108e5350f39fb22e4c71bb240be33f3c9a7a6ef31b9759811	djn1@live.co.uk	2026-01-04 14:14:59.782017	2026-01-04 14:14:59.782017	\N
+COPY "auth"."one_time_tokens" ("id", "user_id", "token_type", "token_hash", "relates_to", "created_at", "updated_at", "expires_at", "link_token_hash") FROM stdin;
+f0141082-3818-4839-84e0-c2428ee55fbc	f4f2721b-d4bb-4c6b-bdab-da64efdce650	recovery_token	e7ecec3108e5350f39fb22e4c71bb240be33f3c9a7a6ef31b9759811	djn1@live.co.uk	2026-01-04 14:14:59.782017	2026-01-04 14:14:59.782017	\N	\N
 \.
 
 
@@ -2135,7 +2135,7 @@ COPY "auth"."sso_providers" ("id", "resource_id", "created_at", "updated_at", "d
 -- Data for Name: saml_providers; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-COPY "auth"."saml_providers" ("id", "sso_provider_id", "entity_id", "metadata_xml", "metadata_url", "attribute_mapping", "created_at", "updated_at", "name_id_format") FROM stdin;
+COPY "auth"."saml_providers" ("id", "sso_provider_id", "entity_id", "metadata_xml", "metadata_url", "attribute_mapping", "created_at", "updated_at", "name_id_format", "dedicated_scope") FROM stdin;
 \.
 
 
@@ -2948,6 +2948,6 @@ SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 925, true);
 -- PostgreSQL database dump complete
 --
 
--- \unrestrict MFsT5PeujN78J27fuWtCUVfsWJGiakiePZuThTtahjcJGqELKgT6VJ1WiRO5GKq
+-- \unrestrict FXahiPboryIGpmxydMyu1OVH9BXf9xpWXLi45vWUgYQdZplZrEdtPHBg45diFMt
 
 RESET ALL;
